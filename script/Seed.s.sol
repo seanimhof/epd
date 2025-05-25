@@ -5,7 +5,6 @@ import "forge-std/Script.sol";
 import "../src/Registry.sol";
 
 contract SeedRegistry is Script {
-
     struct SampleData {
         string ahv;
         string birthdate;
@@ -23,7 +22,7 @@ contract SeedRegistry is Script {
 
         Registry registry = Registry(vm.envAddress("CONTRACT_ADDRESS"));
 
-        for(uint256 i = 0; i < data.length; i++) {
+        for (uint256 i = 0; i < data.length; i++) {
             bytes32 id = sha256(abi.encodePacked(data[i].ahv, data[i].birthdate));
             console2.logBytes32(id);
             console.log(data[i].record.epdProviderName);
@@ -36,34 +35,30 @@ contract SeedRegistry is Script {
     }
 
     function init() internal {
-        data.push(SampleData({
-            ahv: "756.1234.5678.90",
-            birthdate: "01.01.2002",
-            record: Registry.Record({
-                epdProviderName: "eSanita",
-                contactInfo: "https://eSanita.ch",
-                exist: true
-            })})
+        data.push(
+            SampleData({
+                ahv: "756.1234.5678.90",
+                birthdate: "01.01.2002",
+                record: Registry.Record({epdProviderName: "eSanita", contactInfo: "https://eSanita.ch", exist: true})
+            })
         );
 
-        data.push(SampleData({
-            ahv: "756.0987.6543.21",
-            birthdate: "31.12.1999",
-            record: Registry.Record({
-                epdProviderName: "Emedo",
-                contactInfo: "https://emedo.ch",
-                exist: true
-            })})
+        data.push(
+            SampleData({
+                ahv: "756.0987.6543.21",
+                birthdate: "31.12.1999",
+                record: Registry.Record({epdProviderName: "Emedo", contactInfo: "https://emedo.ch", exist: true})
+            })
         );
 
-        data.push(SampleData({
+        data.push(
+            SampleData({
                 ahv: "756.1212.1212.12",
                 birthdate: "06.06.1985",
                 record: Registry.Record({
                     epdProviderName: unicode"Dossier Santé",
                     contactInfo: "https://sante.ch",
                     exist: true
-
                 })
             })
         );
