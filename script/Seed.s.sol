@@ -23,7 +23,7 @@ contract SeedRegistry is Script {
         Registry registry = Registry(vm.envAddress("CONTRACT_ADDRESS"));
 
         for (uint256 i = 0; i < data.length; i++) {
-            bytes32 id = sha256(abi.encodePacked(data[i].ahv, data[i].birthdate));
+            bytes32 id = keccak256(abi.encodePacked(data[i].ahv, data[i].birthdate));
             console2.logBytes32(id);
             console.log(data[i].record.epdProviderName);
             registry.insertEPD(id, data[i].record.epdProviderName, data[i].record.contactInfo);

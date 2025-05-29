@@ -12,7 +12,7 @@ contract RegistryTest is Test {
     }
 
     function testInsertEPD() public {
-        bytes32 id = sha256(abi.encodePacked("756.1234.5678.9701.01.2000"));
+        bytes32 id = keccak256(abi.encodePacked("756.1234.5678.9701.01.2000"));
         registry.insertEPD(id, "eSanita", "https://eSanita.ch");
 
         (string memory epdProviderName, string memory contactInfo) = registry.searchEPD(id);
@@ -21,7 +21,7 @@ contract RegistryTest is Test {
     }
 
     function testUpdateEPD() public {
-        bytes32 id = sha256(abi.encodePacked("756.1234.5678.9901.01.2000"));
+        bytes32 id = keccak256(abi.encodePacked("756.1234.5678.9901.01.2000"));
         registry.insertEPD(id, "eSanita", "https://eSanita.ch");
 
         registry.updateEPD(id, "Emedo", "https://emedo.ch");
@@ -32,7 +32,7 @@ contract RegistryTest is Test {
     }
 
     function testDeleteEPD() public {
-        bytes32 id = sha256(abi.encodePacked("756.1234.5678.9901.01.2000"));
+        bytes32 id = keccak256(abi.encodePacked("756.1234.5678.9901.01.2000"));
         registry.insertEPD(id, "eSanita", "https://eSanita.ch");
 
         registry.deleteEPD(id);
@@ -42,7 +42,7 @@ contract RegistryTest is Test {
     }
 
     function testPreventDuplicateInsert() public {
-        bytes32 id = sha256(abi.encodePacked("756.1234.5678.9901.01.2000"));
+        bytes32 id = keccak256(abi.encodePacked("756.1234.5678.9901.01.2000"));
         registry.insertEPD(id, "eSanita", "https://eSanita.ch");
 
         vm.expectRevert(bytes("EPD with this ID already exists"));
@@ -50,14 +50,14 @@ contract RegistryTest is Test {
     }
 
     function testPreventUpdateNonExistentEPD() public {
-        bytes32 nonExistentId = sha256(abi.encodePacked("756.0000.0000.0001.01.2000"));
+        bytes32 nonExistentId = keccak256(abi.encodePacked("756.0000.0000.0001.01.2000"));
 
         vm.expectRevert(bytes("ID not found"));
         registry.updateEPD(nonExistentId, "Emedo", "https://emedo.ch");
     }
 
     function testPreventDeleteNonExistentEPD() public {
-        bytes32 nonExistentId = sha256(abi.encodePacked("756.0000.0000.0001.01.2000"));
+        bytes32 nonExistentId = keccak256(abi.encodePacked("756.0000.0000.0001.01.2000"));
 
         vm.expectRevert(bytes("EPD with this ID not found"));
         registry.deleteEPD(nonExistentId);
