@@ -4,7 +4,7 @@
 
 Foundry is a "Blazing fast smart contract developement toolkit", which is used in this project. Installation instruction can be found [here](https://book. getfoundry.sh). Ensure it is installed, and the anvil command can be run.
 
-# Project Setup
+# Setup Registry
 
 ## 1. Checkout the following repositories
 
@@ -71,6 +71,9 @@ export CONTRACT_ADDRESS=<Contract Address>
 forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY
 ```
 
+## Setup Audit
+
+## Setup Frontend
 
 ### Interact with the Frontend
 Check the Frontend Repository to set it up locally: [Frontend](https://github.com/seanimhof/epd-frontend)
