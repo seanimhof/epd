@@ -1,0 +1,193 @@
+[
+  {
+    "type": "function",
+    "name": "deleteEPD",
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "insertEPD",
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "_epdProviderName",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
+        "name": "_contactInfo",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "searchEPD",
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
+        "name": "",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "updateEPD",
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "_epdProviderName",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
+        "name": "_contactInfo",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "event",
+    "name": "EPDDeleted",
+    "inputs": [
+      {
+        "name": "id",
+        "type": "string",
+        "indexed": true,
+        "internalType": "string"
+      },
+      {
+        "name": "record",
+        "type": "tuple",
+        "indexed": false,
+        "internalType": "struct Registry.Record",
+        "components": [
+          {
+            "name": "epdProviderName",
+            "type": "string",
+            "internalType": "string"
+          },
+          {
+            "name": "contactInfo",
+            "type": "string",
+            "internalType": "string"
+          },
+          {
+            "name": "exist",
+            "type": "bool",
+            "internalType": "bool"
+          }
+        ]
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "EPDInserted",
+    "inputs": [
+      {
+        "name": "id",
+        "type": "string",
+        "indexed": true,
+        "internalType": "string"
+      },
+      {
+        "name": "record",
+        "type": "tuple",
+        "indexed": false,
+        "internalType": "struct Registry.Record",
+        "components": [
+          {
+            "name": "epdProviderName",
+            "type": "string",
+            "internalType": "string"
+          },
+          {
+            "name": "contactInfo",
+            "type": "string",
+            "internalType": "string"
+          },
+          {
+            "name": "exist",
+            "type": "bool",
+            "internalType": "bool"
+          }
+        ]
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "EPDUpdated",
+    "inputs": [
+      {
+        "name": "id",
+        "type": "string",
+        "indexed": true,
+        "internalType": "string"
+      },
+      {
+        "name": "record",
+        "type": "tuple",
+        "indexed": false,
+        "internalType": "struct Registry.Record",
+        "components": [
+          {
+            "name": "epdProviderName",
+            "type": "string",
+            "internalType": "string"
+          },
+          {
+            "name": "contactInfo",
+            "type": "string",
+            "internalType": "string"
+          },
+          {
+            "name": "exist",
+            "type": "bool",
+            "internalType": "bool"
+          }
+        ]
+      }
+    ],
+    "anonymous": false
+  }
+]

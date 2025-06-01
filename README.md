@@ -4,27 +4,27 @@
 
 Foundry is a "Blazing fast smart contract developement toolkit", which is used in this project. Installation instruction can be found [here](https://book. getfoundry.sh). Ensure it is installed, and the anvil command can be run.
 
-# Setup Registry
+## Frontend
 
-## 1. Checkout the following repositories
 
-- [epd-frontend](https://github.com/seanimhof/epd-frontend)
-- [epd-audit](https://github.com/seanimhof/epd-audit)
-- [epd-registry](https://github.com/seanimhof/epd-registry)
 
-## 2. Open a terminal and navigate to the checked out folder containing "epd-registry"
+# Setup
 
-## 3. Build the contract
+
+## Open a terminal and navigate to thec checked out folder
+
+## Build the contract
 ```shell
 forge build
 ```
 
-## 4. Get ABI of the contract
+## Get ABI of the contracts
 ```shell
-forge build --silent && jq '.abi' ./out/Registry.sol/Registry.json > registry_abi.json
+forge build --silent && jq '.abi' ./out/Registry.sol/Registry.json > registry_abi.json 
+forge build --silent && jq '.abi' ./out/Audit.sol/Audit.json > audit_abi.json
 ```
 
-## 5. Setup Environment variables
+## Setup Environment variables
 
 1. Start anvil
 ```shell
@@ -48,30 +48,35 @@ export PKEY=<Private Key>
 5. Copy the address from the output above ("127.0.0.1:8545")
 ```shell
 export RPC=http://<listening-address>
-```
 6. Deploy the contract
 ```shell
 forge script script/Deploy.s.sol --broadcast --rpc-url $RPC --private-key $PKEY
 ```
+```
 7. You should see the following output
 ```shell
-##### anvil-hardhat
-✅  [Success] Hash: 0xc8253ac6b04db9d4687499723a8fb4c3184d3493fa851ee9f4869df44228c8b2
-Contract Address: <Contract Address>
-Block: 1
-Paid: 0.001212772001212772 ETH (1212772 gas * 1.000000001 gwei)
+== Logs ==
+  Registry deployed at: 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9
+  Audit deployed at: 0x5FC8d32690cc91D4c39d9d3abcBD16989F875707
+
 ```
-8. Export the contact address
+7. Seed the Registry
 ```shell
-export CONTRACT_ADDRESS=<Contract Address>
+export REGISTRY_CONTRACT_ADDRESS=<Contract Address>
+CONTRACT_ADDRESS=<Contract Address> & forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY --tc=SeedRegistry
 ```
 
-9. At last you need to write some test entries
+8. Seed the Audit
 ```shell
-forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY
+export AUDIT_CONTRACT_ADDRESS=<Contract Address>
+CONTRACT_ADDRESS=<Contract Address> & forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY --tc=SeedAudit
 ```
 
-## Setup Audit
+CONTRACT_ADDRESS=0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512 forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY --tc=SeedAudit
+
+
+// TODO
+
 
 ## Setup Frontend
 
