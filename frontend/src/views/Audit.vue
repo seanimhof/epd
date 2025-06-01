@@ -6,7 +6,7 @@ import AuditBlockchain from '@/components/AuditBlockchain.vue';
 
 <template>
 
-<div class="flex flex-col items-center text-white px-4">
+<div class="flex flex-col items-center dark:text-white px-4">
 
     <Audit></Audit>
     <AuditBlockchain></AuditBlockchain>

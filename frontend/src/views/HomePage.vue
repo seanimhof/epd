@@ -7,14 +7,14 @@
     <div class="flex gap-6">
       <button
         @click="goTo('registry')"
-        class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+        class="px-6 py-3 bg-green-600 dark:text-white rounded-lg hover:bg-green-700 transition"
       >
         Go to Registry
       </button>
 
       <button
         @click="goTo('audit')"
-        class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+        class="px-6 py-3 bg-blue-600 dark:text-white rounded-lg hover:bg-blue-700 transition"
       >
         Go to Audit
       </button>

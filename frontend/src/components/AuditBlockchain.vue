@@ -27,7 +27,7 @@ const formatTimestamp = (timestamp: bigint) => {
     <p class="text-x1 mb-4 text-center">CA: {{ CONTRACT_ADDRESS }}</p>
     <div class="grid grid-cols-5 gap-4 mb-6 max-w-full w-full">
 
-     <div v-for="(event, index) in sortedEntries.slice(-15).reverse()" :key="event.txHash + index" class="bg-gray-800 p-4 rounded-lg shadow-md">
+     <div v-for="(event, index) in sortedEntries.slice(-15).reverse()" :key="event.txHash + index" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
       <div class="grid grid-cols-[auto_1fr] gap-x-2 gap-y-0">
 
         <span class="font-semibold">Block Number:</span>

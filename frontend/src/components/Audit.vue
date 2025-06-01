@@ -48,12 +48,12 @@ const addAuditLog = async () => {
 
     <div class="flex flew-row gap-4 w-125">
       
-      <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
         <h2 class="text-xl text-center font-semibold mb-4 pb-2">Add Audit Log</h2>
-        <input v-model="accessorId" placeholder="Zugreifer" class="border px-3 py-2 w-full rounded mb-4 text-white" />
-        <input v-model="epdId" placeholder="EPD" class="border px-3 py-2 w-full rounded mb-4 text-white" />
-        <input v-model="accessType" placeholder="Zugriffsart" class="border px-3 py-2 w-full rounded mb-4 text-white" />
-        <button @click="addAuditLog" class="bg-blue-500 text-white px-4 py-2 rounded w-full">Add</button>
+        <input v-model="accessorId" placeholder="Zugreifer" class="border px-3 py-2 w-full rounded mb-4 dark:text-white" />
+        <input v-model="epdId" placeholder="EPD" class="border px-3 py-2 w-full rounded mb-4 dark:text-white" />
+        <input v-model="accessType" placeholder="Zugriffsart" class="border px-3 py-2 w-full rounded mb-4 dark:text-white" />
+        <button @click="addAuditLog" class="bg-blue-500 dark:text-white px-4 py-2 rounded w-full">Add</button>
       </div>
 
     </div>

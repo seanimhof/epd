@@ -6,7 +6,7 @@ import RegistryBlockchain from '@/components/RegistryBlockchain.vue';
 
 <template>
 
-<div class="flex flex-col items-center text-white px-4">
+<div class="flex flex-col items-center dark:text-white px-4">
 
     <Registry></Registry>
     <RegistryBlockchain></RegistryBlockchain>
