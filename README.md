@@ -73,7 +73,7 @@ CONTRACT_ADDRESS=$AUDIT_CONTRACT_ADDRESS forge script script/Seed.s.sol --broadc
 
 10. Create the contract
 ```shell
-REGISTRY=$REGISTRY_CONTRACT_ADDRESS AUDIT=$AUDIT_CONTRACT_ADDRESS pnpm exec -- node -e "require('fs').writeFileSync('addresses.json', JSON.stringify({ registry: process.env.REGISTRY, audit: process.env.AUDIT }, null, 2))"
+REGISTRY=$REGISTRY_CONTRACT_ADDRESS AUDIT=$AUDIT_CONTRACT_ADDRESS pnpm exec -- node -e "require('fs').writeFileSync('src/contracts/addresses.json', JSON.stringify({ registry: process.env.REGISTRY, audit: process.env.AUDIT }, null, 2))"
 ```
 
 # Run the frontend
