@@ -37,6 +37,14 @@ jobs:
         run: pnpm install
         working-directory: frontend
 
+      - name: Create Contracts
+        run: |
+          pnpm exec -- node -e "require('fs').writeFileSync('frontend/src/contracts/addresses.json', JSON.stringify({ registry: process.env.REGISTRY, audit: process.env.AUDIT }, null, 2))"
+        env:
+          REGISTRY: ${{ env.REGISTRY_CONTRACT_ADDRESS }}
+          AUDIT: ${{ env.REGISTRY_CONTRACT_ADDRESS }}
+      
+
       - name: Build with Vite
         run: pnpm build
         working-directory: frontend
