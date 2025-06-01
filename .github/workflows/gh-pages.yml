@@ -16,13 +16,28 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  FOUNDRY_PROFILE: ci
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Build forge contracts
+        run: |
+          forge build --silent 
+      - name: Copy ABIs 
+        run: |
+          jq '.abi' ./out/Registry.sol/Registry.json > frontend/src/contracts/registry_abi.json
+          jq '.abi' ./out/Audit.sol/Audit.json > frontend/src/contracts/audit_abi.json
+         
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -39,10 +54,11 @@ jobs:
 
       - name: Create Contracts
         run: |
-          pnpm exec -- node -e "require('fs').writeFileSync('frontend/src/contracts/addresses.json', JSON.stringify({ registry: process.env.REGISTRY, audit: process.env.AUDIT }, null, 2))"
+          pnpm exec -- node -e "require('fs').writeFileSync('src/contracts/addresses.json', JSON.stringify({ registry: process.env.REGISTRY, audit: process.env.AUDIT }, null, 2))"
+        working-directory: frontend
         env:
-          REGISTRY: ${{ env.REGISTRY_CONTRACT_ADDRESS }}
-          AUDIT: ${{ env.REGISTRY_CONTRACT_ADDRESS }}
+          REGISTRY: ${{ vars.REGISTRY_CONTRACT_ADDRESS }}
+          AUDIT: ${{ vars.REGISTRY_CONTRACT_ADDRESS }}
       
 
       - name: Build with Vite
