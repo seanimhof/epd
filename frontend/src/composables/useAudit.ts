@@ -26,12 +26,13 @@ export function useAudit() {
       console.error("Wallet not found")
       return
     }
-    
-    if(entries.value.length > 0) return
+
+    if (entries.value.length > 0) return
 
     provider = new BrowserProvider(window.ethereum)
     const signer = await provider.getSigner()
     contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer)
+    console.log(CONTRACT_ADDRESS)
 
     const insertedLogs = await contract.queryFilter(contract.filters.AuditLogged())
 
