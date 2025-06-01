@@ -6,9 +6,10 @@ Foundry is a "Blazing fast smart contract developement toolkit", which is used i
 
 ## Frontend
 
+- Install [nodejs](https://nodejs.org/en)
+- Install pnpm from [here](https://pnpm.io/installation)
 
-
-# Setup
+# Getting started
 
 
 ## Open a terminal and navigate to thec checked out folder
@@ -20,8 +21,7 @@ forge build
 
 ## Get ABI of the contracts
 ```shell
-forge build --silent && jq '.abi' ./out/Registry.sol/Registry.json > registry_abi.json 
-forge build --silent && jq '.abi' ./out/Audit.sol/Audit.json > audit_abi.json
+forge build --silent && jq '.abi' ./out/Registry.sol/Registry.json > frontend/src/contracts/registry_abi.json  && jq '.abi' ./out/Audit.sol/Audit.json > frontend/src/contracts/audit_abi.json
 ```
 
 ## Setup Environment variables
@@ -41,7 +41,7 @@ Private Keys
 Listening on 127.0.0.1:8545
 ```
 3. Open a second terminal
-4. Copy the first private key and export it as follows. Replace \<Private Key\> with the private key from the output above
+4. Copy the first private key and export it as follows. Replace \<Private Key\> with the private key from the output above. Note the private key, we need it later
 ```shell
 export PKEY=<Private Key>
 ```
@@ -63,20 +63,36 @@ forge script script/Deploy.s.sol --broadcast --rpc-url $RPC --private-key $PKEY
 7. Seed the Registry
 ```shell
 export REGISTRY_CONTRACT_ADDRESS=<Contract Address>
-CONTRACT_ADDRESS=<Contract Address> & forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY --tc=SeedRegistry
+CONTRACT_ADDRESS=<Contract Address> forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY --tc=SeedRegistry
 ```
 
 8. Seed the Audit
 ```shell
 export AUDIT_CONTRACT_ADDRESS=<Contract Address>
-CONTRACT_ADDRESS=<Contract Address> & forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY --tc=SeedAudit
+CONTRACT_ADDRESS=<Contract Address> forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY --tc=SeedAudit
 ```
 
-CONTRACT_ADDRESS=0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512 forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY --tc=SeedAudit
+# Run the frontend
 
+1. Install [metamask](https://metamask.io/download) in a supported browser. 
 
-// TODO
+2. Restart Firefox
+3. To use the Frontend a Web3 Wallet like [Metamask](https://metamask.io/download) Browser Extensions is needed. After the installation the Network with the RPC URL needs to be configured to communicate with the Blockchain.   Instruction to add a custom Network in Metamask (https://support.metamask.io/configure/networks/how-to-add-a-custom-network-rpc/) For the local test environment it's anvil:  
+```
+Network Name: Anvil
+RPC URL: http://127.0.0.1:8545
+Chain ID: 31337
+Currency Symobl: ETH
+Block-Explorer: empty
+```
+4. Add a new wallet by adding the private key copied above (without the 0x at the start)
 
+5. Open a new terminal and type the following command
+```shell
+cd frontend && pnpm install && pnpm dev
+```
+
+3. Open [http://localhost:5173/epd-frontend](http://localhost:5173/epd-frontend) in the browser, where metamask is installed. Open the registry
 
 ## Setup Frontend
 
@@ -88,22 +104,22 @@ Check the Frontend Repository to set it up locally: [Frontend](https://github.co
 **Search an EPD with the AHV-Number and Birthdate**
 ```shell
 cast decode-abi "searchEPD(string,string)" --input "$(
-  cast call $CONTRACT_ADDRESS "searchEPD(bytes32)" "$(cast keccak '<ahv+birthdate>')"
+  cast call $REGISTRY_CONTRACT_ADDRESS "searchEPD(bytes32)" "$(cast keccak '<ahv+birthdate>')"
 )"
 ```
 **Insert a new EPD Record**
 ```shell
-cast send --private-key $PKEY $CONTRACT_ADDRESS "insertEPD(bytes32, string, string)" $(cast keccak "<ahv+birthdate>") '"<EPD-Provider>"' '"<URL>"'
+cast send --private-key $PKEY $REGISTRY_CONTRACT_ADDRESS "insertEPD(bytes32, string, string)" $(cast keccak "<ahv+birthdate>") '"<EPD-Provider>"' '"<URL>"'
 ```
 
 **Update a Record**
 ```shell
-cast send --private-key $PKEY $CONTRACT_ADDRESS "updateEPD(bytes32, string, string)" $(cast keccak "<ahv+birthdate>") '"<EPD-Provider>"' '"<URL>"'
+cast send --private-key $PKEY $REGISTRY_CONTRACT_ADDRESS "updateEPD(bytes32, string, string)" $(cast keccak "<ahv+birthdate>") '"<EPD-Provider>"' '"<URL>"'
 ```
 
 **Delete a Record**
 ```shell
-cast send --private-key $PKEY $CONTRACT_ADDRESS "deleteEPD(bytes32)" $(cast keccak "<ahv+birthdate>")
+cast send --private-key $PKEY $REGISTRY_CONTRACT_ADDRESS "deleteEPD(bytes32)" $(cast keccak "<ahv+birthdate>")
 ```
 
 
