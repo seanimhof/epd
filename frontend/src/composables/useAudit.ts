@@ -32,7 +32,6 @@ export function useAudit() {
     provider = new BrowserProvider(window.ethereum)
     const signer = await provider.getSigner()
     contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer)
-    console.log(CONTRACT_ADDRESS)
 
     const insertedLogs = await contract.queryFilter(contract.filters.AuditLogged())
 
@@ -52,8 +51,11 @@ export function useAudit() {
 
   const listenForNewEntries = () => {
     if (!contract || !provider) return
+    
 
     contract.on("AuditLogged", async (timestamp, accessorId, epdId, accessType, dataHash, payload) => {
+
+      if (entries.value.find(e => e.dataHash === dataHash)) return
 
       if (!provider) return
 
