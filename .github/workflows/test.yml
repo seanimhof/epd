@@ -2,6 +2,8 @@ name: CI
 
 on:
   push:
+    branches:
+      - readme-update
   pull_request:
   workflow_dispatch:
 
