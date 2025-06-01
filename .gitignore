@@ -17,3 +17,6 @@ abi.json
 audit_abi.json
 registry_abi.json
 registry_abi.json
+
+anvil_output.log
+anvil.log
