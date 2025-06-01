@@ -1,37 +1,72 @@
+# Preconditions
+
+## Foundry
+
+Foundry is a "Blazing fast smart contract developement toolkit", which is used in this project. Installation instruction can be found [here](https://book. getfoundry.sh). Ensure it is installed, and the anvil command can be run.
+
 # Project Setup
 
-## Build the contract
+## 1. Checkout the following repositories
+
+- [epd-frontend](https://github.com/seanimhof/epd-frontend)
+- [epd-audit](https://github.com/seanimhof/epd-audit)
+- [epd-registry](https://github.com/seanimhof/epd-registry)
+
+## 2. Open a terminal and navigate to the checked out folder containing "epd-registry"
+
+## 3. Build the contract
 ```shell
 forge build
 ```
 
-## Get ABI of the contract (needed only for the frontend)
+## 4. Get ABI of the contract
 ```shell
 forge build --silent && jq '.abi' ./out/Registry.sol/Registry.json > registry_abi.json
 ```
-Or copy direct from out/Registry.sol/Registry.json
 
-## Run locally with anvil as the blockchain
+## 5. Setup Environment variables
 
-### Start Anvil
+1. Start anvil
 ```shell
 anvil --state ./anvil/state
 ```
-After the start anvil shows informatins about the rpc url Private Keys and Public Keys. <br>
-Create env vars for the rpc url, private and public Key to the env
+2. This may take a couple of seconds, after that you should see the following message
 ```shell
-export RPC=http://127.0.0.1:8545
+Private Keys
+==================
+
+...
+...
+...
+Listening on 127.0.0.1:8545
+```
+3. Open a second terminal
+4. Copy the first private key and export it as follows. Replace \<Private Key\> with the private key from the output above
+```shell
 export PKEY=<Private Key>
 ```
-
-### deploy contract and create some test entries
+5. Copy the address from the output above ("127.0.0.1:8545")
+```shell
+export RPC=http://<listening-address>
+```
+6. Deploy the contract
 ```shell
 forge script script/Deploy.s.sol --broadcast --rpc-url $RPC --private-key $PKEY
 ```
-After the Deplyoment you get a contract address to set as env var for later interactions
+7. You should see the following output
 ```shell
-export CONTRACT_ADDRESS=<CA>
+##### anvil-hardhat
+✅  [Success] Hash: 0xc8253ac6b04db9d4687499723a8fb4c3184d3493fa851ee9f4869df44228c8b2
+Contract Address: <Contract Address>
+Block: 1
+Paid: 0.001212772001212772 ETH (1212772 gas * 1.000000001 gwei)
 ```
+8. Export the contact address
+```shell
+export CONTRACT_ADDRESS=<Contract Address>
+```
+
+9. At last you need to write some test entries
 ```shell
 forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY
 ```
