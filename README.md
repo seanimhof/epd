@@ -89,10 +89,10 @@ Block-Explorer: empty
 
 5. Open a new terminal and type the following command
 ```shell
-cd frontend && pnpm install && pnpm dev
+cd frontend && pnpm install && pnpm build && pnpm preview 
 ```
 
-3. Open [http://localhost:5173/epd-frontend](http://localhost:5173/epd-frontend) in the browser, where metamask is installed. Open the registry
+3. Open [http://localhost:4173/epd-frontend](http://localhost:4173/epd-frontend) in the browser, where metamask is installed. Open the registry
 
 ## Setup Frontend
 
