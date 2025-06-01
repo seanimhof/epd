@@ -9,7 +9,7 @@
       <div class="flex justify-between h-16 items-center">
         <!-- Logo / Title -->
         <router-link
-            to="/epd-frontend"
+            to="/"
             class="px-4 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white transition"
             active-class="bg-gray-200 dark:bg-gray-800 font-semibold"
             exact
@@ -22,7 +22,7 @@
           
 
           <router-link
-            to="/epd-frontend/registry"
+            to="/registry"
             class="px-4 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white transition"
             active-class="bg-gray-200 dark:bg-gray-800 font-semibold"
           >
@@ -30,7 +30,7 @@
           </router-link>
 
           <router-link
-            to="/epd-frontend/audit"
+            to="/audit"
             class="px-4 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white transition"
             active-class="bg-gray-200 dark:bg-gray-800 font-semibold"
           >

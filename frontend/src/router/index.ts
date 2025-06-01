@@ -6,24 +6,24 @@ import Audit from '../views/Audit.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/epd',
+    path: '/',
     name: 'Home',
     component: HomePage
   },
   {
-    path: '/epd/registry',
+    path: '/registry',
     name: 'Registry',
     component: Registry
   },
   {
-    path: '/epd/audit',
+    path: '/audit',
     name: 'Audit',
     component: Audit
   }
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHashHistory('/epd'),
   routes
 })
 
