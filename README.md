@@ -60,16 +60,20 @@ forge script script/Deploy.s.sol --broadcast --rpc-url $RPC --private-key $PKEY
   Audit deployed at: 0x5FC8d32690cc91D4c39d9d3abcBD16989F875707
 
 ```
-7. Seed the Registry
+8. Setup environment variables
 ```shell
-export REGISTRY_CONTRACT_ADDRESS=<Contract Address>
-CONTRACT_ADDRESS=<Contract Address> forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY --tc=SeedRegistry
+export REGISTRY_CONTRACT_ADDRESS=<Registry-Contract Address> # 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9
+export AUDIT_CONTRACT_ADDRESS=<Audit-Contract Address> #0x5FC8d32690cc91D4c39d9d3abcBD16989F875707
+```
+9. Seed the Registry
+```shell
+CONTRACT_ADDRESS=$REGISTRY_CONTRACT_ADDRESS forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY --tc=SeedRegistry
+CONTRACT_ADDRESS=$AUDIT_CONTRACT_ADDRESS forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY --tc=SeedAudit
 ```
 
-8. Seed the Audit
+10. Create the contract
 ```shell
-export AUDIT_CONTRACT_ADDRESS=<Contract Address>
-CONTRACT_ADDRESS=<Contract Address> forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY --tc=SeedAudit
+REGISTRY=$REGISTRY_CONTRACT_ADDRESS AUDIT=$AUDIT_CONTRACT_ADDRESS pnpm exec -- node -e "require('fs').writeFileSync('addresses.json', JSON.stringify({ registry: process.env.REGISTRY, audit: process.env.AUDIT }, null, 2))"
 ```
 
 # Run the frontend
