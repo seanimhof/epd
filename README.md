@@ -1,41 +1,108 @@
-# Project Setup
+# Preconditions
+
+## Foundry
+
+Foundry is a "Blazing fast smart contract developement toolkit", which is used in this project. Installation instruction can be found [here](https://book. getfoundry.sh). Ensure it is installed, and the anvil command can be run.
+
+## Frontend
+
+- Install [nodejs](https://nodejs.org/en)
+- Install pnpm from [here](https://pnpm.io/installation)
+
+# Getting started
+
+
+## Open a terminal and navigate to thec checked out folder
 
 ## Build the contract
 ```shell
 forge build
 ```
 
-## Get ABI of the contract (needed only for the frontend)
+## Get ABI of the contracts
 ```shell
-forge build --silent && jq '.abi' ./out/Registry.sol/Registry.json > registry_abi.json
+forge build --silent && jq '.abi' ./out/Registry.sol/Registry.json > frontend/src/contracts/registry_abi.json  && jq '.abi' ./out/Audit.sol/Audit.json > frontend/src/contracts/audit_abi.json
 ```
-Or copy direct from out/Registry.sol/Registry.json
 
-## Run locally with anvil as the blockchain
+## Setup Environment variables
 
-### Start Anvil
+1. Start anvil
 ```shell
 anvil --state ./anvil/state
 ```
-After the start anvil shows informatins about the rpc url Private Keys and Public Keys. <br>
-Create env vars for the rpc url, private and public Key to the env
+2. This may take a couple of seconds, after that you should see the following message
 ```shell
-export RPC=http://127.0.0.1:8545
+Private Keys
+==================
+
+...
+...
+...
+Listening on 127.0.0.1:8545
+```
+3. Open a second terminal
+4. Copy the first private key and export it as follows. Replace \<Private Key\> with the private key from the output above. Note the private key, we need it later
+```shell
 export PKEY=<Private Key>
 ```
-
-### deploy contract and create some test entries
+5. Copy the address from the output above ("127.0.0.1:8545")
+```shell
+export RPC=http://<listening-address>
+6. Deploy the contract
 ```shell
 forge script script/Deploy.s.sol --broadcast --rpc-url $RPC --private-key $PKEY
 ```
-After the Deplyoment you get a contract address to set as env var for later interactions
-```shell
-export CONTRACT_ADDRESS=<CA>
 ```
+7. You should see the following output
 ```shell
-forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY
+== Logs ==
+  Registry deployed at: 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9
+  Audit deployed at: 0x5FC8d32690cc91D4c39d9d3abcBD16989F875707
+
+```
+8. Setup environment variables
+```shell
+export REGISTRY_CONTRACT_ADDRESS=<Registry-Contract Address> # 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9
+export AUDIT_CONTRACT_ADDRESS=<Audit-Contract Address> #0x5FC8d32690cc91D4c39d9d3abcBD16989F875707
+```
+9. Seed the Registry
+```shell
+CONTRACT_ADDRESS=$REGISTRY_CONTRACT_ADDRESS forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY --tc=SeedRegistry
+CONTRACT_ADDRESS=$AUDIT_CONTRACT_ADDRESS forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY --tc=SeedAudit
 ```
 
+10. Create the contract
+```shell
+REGISTRY=$REGISTRY_CONTRACT_ADDRESS AUDIT=$AUDIT_CONTRACT_ADDRESS pnpm exec -- node -e "require('fs').writeFileSync('addresses.json', JSON.stringify({ registry: process.env.REGISTRY, audit: process.env.AUDIT }, null, 2))"
+```
+
+# Run the frontend
+
+
+
+1. Install [metamask](https://metamask.io/download) in a supported browser. 
+
+2. Restart Firefox
+3. To use the Frontend a Web3 Wallet like [Metamask](https://metamask.io/download) Browser Extensions is needed. After the installation the Network with the RPC URL needs to be configured to communicate with the Blockchain.   Instruction to add a custom Network in Metamask (https://support.metamask.io/configure/networks/how-to-add-a-custom-network-rpc/) For the local test environment it's anvil:  
+```
+Network Name: Anvil
+RPC URL: http://127.0.0.1:8545
+Chain ID: 31337
+Currency Symobl: ETH
+Block-Explorer: empty
+```
+4. Add a new wallet by adding the private key copied above (without the 0x at the start)
+
+5. Copy the Contract Addresses from the Deplyoment to the frontend/src/contracts/addresses.json  
+
+6. Open a new terminal and type the following command
+```shell
+cd frontend && pnpm install && pnpm build && pnpm preview 
+```
+
+7. Open [http://localhost:4173/epd-frontend](http://localhost:4173/epd-frontend) in the browser, where metamask is installed. Open the registry
+
+## Setup Frontend
 
 ### Interact with the Frontend
 Check the Frontend Repository to set it up locally: [Frontend](https://github.com/seanimhof/epd-frontend)
@@ -45,22 +112,22 @@ Check the Frontend Repository to set it up locally: [Frontend](https://github.co
 **Search an EPD with the AHV-Number and Birthdate**
 ```shell
 cast decode-abi "searchEPD(string,string)" --input "$(
-  cast call $CONTRACT_ADDRESS "searchEPD(bytes32)" "$(cast keccak '<ahv+birthdate>')"
+  cast call $REGISTRY_CONTRACT_ADDRESS "searchEPD(bytes32)" "$(cast keccak '<ahv+birthdate>')"
 )"
 ```
 **Insert a new EPD Record**
 ```shell
-cast send --private-key $PKEY $CONTRACT_ADDRESS "insertEPD(bytes32, string, string)" $(cast keccak "<ahv+birthdate>") '"<EPD-Provider>"' '"<URL>"'
+cast send --private-key $PKEY $REGISTRY_CONTRACT_ADDRESS "insertEPD(bytes32, string, string)" $(cast keccak "<ahv+birthdate>") '"<EPD-Provider>"' '"<URL>"'
 ```
 
 **Update a Record**
 ```shell
-cast send --private-key $PKEY $CONTRACT_ADDRESS "updateEPD(bytes32, string, string)" $(cast keccak "<ahv+birthdate>") '"<EPD-Provider>"' '"<URL>"'
+cast send --private-key $PKEY $REGISTRY_CONTRACT_ADDRESS "updateEPD(bytes32, string, string)" $(cast keccak "<ahv+birthdate>") '"<EPD-Provider>"' '"<URL>"'
 ```
 
 **Delete a Record**
 ```shell
-cast send --private-key $PKEY $CONTRACT_ADDRESS "deleteEPD(bytes32)" $(cast keccak "<ahv+birthdate>")
+cast send --private-key $PKEY $REGISTRY_CONTRACT_ADDRESS "deleteEPD(bytes32)" $(cast keccak "<ahv+birthdate>")
 ```
 
 
