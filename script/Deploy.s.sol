@@ -12,7 +12,6 @@ contract DeployRegistry is Script {
         Registry registry = new Registry();
         console.log("Registry deployed at:", address(registry));
 
-
         Audit audit = new Audit();
         console.log("Audit deployed at:", address(audit));
 
