@@ -39,7 +39,7 @@ contract SeedRegistry is Script {
         data.push(
             SampleData({
                 ahv: "756.1234.5678.90",
-                birthdate: "01.01.2002",
+                birthdate: "2002-01-01",
                 record: Registry.Record({epdProviderName: "eSanita", contactInfo: "https://eSanita.ch", exist: true})
             })
         );
@@ -47,7 +47,7 @@ contract SeedRegistry is Script {
         data.push(
             SampleData({
                 ahv: "756.0987.6543.21",
-                birthdate: "31.12.1999",
+                birthdate: "1999-12-31",
                 record: Registry.Record({epdProviderName: "Emedo", contactInfo: "https://emedo.ch", exist: true})
             })
         );
@@ -55,7 +55,7 @@ contract SeedRegistry is Script {
         data.push(
             SampleData({
                 ahv: "756.1212.1212.12",
-                birthdate: "06.06.1985",
+                birthdate: "1985-06-06",
                 record: Registry.Record({
                     epdProviderName: unicode"Dossier Santé",
                     contactInfo: "https://sante.ch",
