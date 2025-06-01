@@ -35,6 +35,7 @@ jobs:
           forge build --silent 
       - name: Copy ABIs 
         run: |
+          mkdir -p frontend/src/contracts
           jq '.abi' ./out/Registry.sol/Registry.json > frontend/src/contracts/registry_abi.json
           jq '.abi' ./out/Audit.sol/Audit.json > frontend/src/contracts/audit_abi.json
          
