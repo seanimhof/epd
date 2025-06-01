@@ -72,7 +72,9 @@ export AUDIT_CONTRACT_ADDRESS=<Contract Address>
 CONTRACT_ADDRESS=<Contract Address> forge script script/Seed.s.sol --broadcast --rpc-url $RPC --private-key $PKEY --tc=SeedAudit
 ```
 
-# Run the frontend
+# Run the frontend
+
+
 
 1. Install [metamask](https://metamask.io/download) in a supported browser. 
 
@@ -87,12 +89,14 @@ Block-Explorer: empty
 ```
 4. Add a new wallet by adding the private key copied above (without the 0x at the start)
 
-5. Open a new terminal and type the following command
+5. Copy the Contract Addresses from the Deplyoment to the frontend/src/contracts/addresses.json  
+
+6. Open a new terminal and type the following command
 ```shell
 cd frontend && pnpm install && pnpm build && pnpm preview 
 ```
 
-3. Open [http://localhost:4173/epd-frontend](http://localhost:4173/epd-frontend) in the browser, where metamask is installed. Open the registry
+7. Open [http://localhost:4173/epd-frontend](http://localhost:4173/epd-frontend) in the browser, where metamask is installed. Open the registry
 
 ## Setup Frontend
 
