@@ -1,91 +1,91 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center bg-gray-100">
-      <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-4xl">
-        <h2 class="text-2xl font-bold mb-6 text-center">EPD-Details</h2>
-  
-        <div v-if="loading" class="text-center text-gray-500">Lade Daten...</div>
-        <div v-else-if="error" class="text-red-600 text-center">{{ error }}</div>
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          
-          <!-- Patient information -->
-          <div>
-            <h3 class="text-xl font-semibold mb-4 border-b pb-2">Patienteninformationen</h3>
-            <p><strong>Vorname:</strong> {{ patient.vorname }}</p>
-            <p><strong>Nachname:</strong> {{ patient.nachname }}</p>
-            <p><strong>Geburtsdatum:</strong> {{ patient.geburtsdatum }}</p>
-          </div>
-  
-          <!-- Documents -->
-          <div>
-            <h3 class="text-xl font-semibold mb-4 border-b pb-2">Dokumente</h3>
-  
-            <ul class="space-y-3 mb-6">
-              <li v-for="(doc, index) in documents" :key="index" class="flex justify-between items-center">
-                <span>{{ doc.name }}</span>
-                <button
-                  @click="downloadDocument(doc)"
-                  class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm"
-                >
-                  Download
-                </button>
-              </li>
-            </ul>
-  
-            <div class="border-t pt-6">
-              <h4 class="text-xl font-semibold mb-4">Neues Dokument hochladen</h4>
-              
-              <!-- File Upload Section -->
-              <div class="flex flex-col items-start space-y-4">
-                <label for="file-upload" class="cursor-pointer bg-green-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-700 transition duration-200">
-                  <span>Dokument auswählen</span>
-                  <input 
-                    id="file-upload" 
-                    type="file" 
-                    @change="handleUpload" 
-                    class="hidden"
-                  />
-                </label>
-  
-                <p v-if="uploadMessage" class="text-green-600 text-sm mt-2">{{ uploadMessage }}</p>
-              </div>
+  <div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-4xl">
+      <h2 class="text-2xl font-bold mb-6 text-center">EPD-Details</h2>
+
+      <div v-if="loading" class="text-center text-gray-500 dark:text-gray-400">Lade Daten...</div>
+      <div v-else-if="error" class="text-red-600 dark:text-red-400 text-center">{{ error }}</div>
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Patient information -->
+        <div>
+          <h3 class="text-xl font-semibold mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">Patienteninformationen</h3>
+          <p><strong>Vorname:</strong> {{ patient.vorname }}</p>
+          <p><strong>Nachname:</strong> {{ patient.nachname }}</p>
+          <p><strong>Geburtsdatum:</strong> {{ patient.geburtsdatum }}</p>
+        </div>
+
+        <!-- Documents -->
+        <div>
+          <h3 class="text-xl font-semibold mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">Dokumente</h3>
+
+          <ul class="space-y-3 mb-6">
+            <li v-for="(doc, index) in documents" :key="index" class="flex justify-between items-center">
+              <span>{{ doc.name }}</span>
+              <button
+                @click="downloadDocument(doc)"
+                class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition text-sm"
+              >
+                Download
+              </button>
+            </li>
+          </ul>
+
+          <div class="border-t border-gray-300 dark:border-gray-600 pt-6">
+            <h4 class="text-xl font-semibold mb-4">Neues Dokument hochladen</h4>
+
+            <div class="flex flex-col items-start space-y-4">
+              <label for="file-upload" class="cursor-pointer bg-green-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-700 transition duration-200">
+                <span>Dokument auswählen</span>
+                <input 
+                  id="file-upload" 
+                  type="file" 
+                  @change="handleUpload" 
+                  class="hidden"
+                />
+              </label>
+
+              <p v-if="uploadMessage" class="text-green-600 dark:text-green-400 text-sm mt-2">{{ uploadMessage }}</p>
             </div>
           </div>
         </div>
-  
-        <!-- Access Log -->
-        <div class="mt-10 border-t pt-6">
-          <h3 class="text-xl font-semibold mb-4">Zugriffsverlauf</h3>
-          <ul class="space-y-2 text-sm text-gray-700">
-            <li v-for="(entry, index) in auditEntries" :key="index">
-              {{ entry.Timestamp.toLocaleString() }} – Zugriff durch {{ entry.Initiator }} ({{ accessTypeGerman(entry.accessType) }})
-            </li>
-          </ul>
-        </div>
-  
-        <!-- Additional buttons for "Delete Dossier" and "Edit Contact Details" -->
-        <div class="mt-8 space-y-4">
-          <button
-            @click="deleteDossier"
-            class="w-full bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition"
-          >
-            Dossier löschen
-          </button>
-  
-          <button
-            @click="editContactDetails"
-            class="w-full bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-yellow-700 transition"
-          >
-            Kontaktdetails anpassen
-          </button>
-        </div>
-  
-        <div class="text-center mt-8">
-          <RouterLink to="/search" class="text-sm text-blue-600 hover:underline">Zurück zur Suche</RouterLink>
-        </div>
+      </div>
+
+      <!-- Access Log -->
+      <div class="mt-10 border-t border-gray-300 dark:border-gray-600 pt-6">
+        <h3 class="text-xl font-semibold mb-4">Zugriffsverlauf</h3>
+        <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+          <li v-for="(entry, index) in auditEntries" :key="index">
+            {{ entry.Timestamp.toLocaleString() }} – Zugriff durch {{ entry.Initiator }} ({{ accessTypeGerman(entry.accessType) }})
+          </li>
+        </ul>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="mt-8 space-y-4">
+        <button
+          @click="deleteDossier"
+          class="w-full bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition"
+        >
+          Dossier löschen
+        </button>
+
+        <button
+          @click="editContactDetails"
+          class="w-full bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-yellow-700 transition"
+        >
+          Kontaktdetails anpassen
+        </button>
+      </div>
+
+      <!-- Back Link -->
+      <div class="text-center mt-8">
+        <RouterLink to="/search" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">Zurück zur Suche</RouterLink>
       </div>
     </div>
-  </template>
-  
+  </div>
+</template>
+
   <script setup lang="ts">
   import { onMounted, ref } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
