@@ -4,7 +4,7 @@
     <!-- Fehlermeldung -->
     <div
       v-if="!walletInstalled"
-      class="absolute top-20 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-red-500 text-white text-center py-4 px-6 rounded-lg shadow-xl flex items-center justify-center gap-3 z-20 dark:bg-red-600"
+      class="absolute top-20 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-red-600 text-white text-center py-4 px-6 rounded-lg shadow-xl flex items-center justify-center gap-3 z-20 dark:bg-red-800"
     >
       <i class="fas fa-exclamation-circle text-2xl"></i>
       <span>
