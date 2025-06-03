@@ -41,7 +41,7 @@ const formatTimestamp = (timestamp: bigint): string => {
         timeStyle: "short",
     })
 };
-export async function getAuditEntries(hash: string): Promise<AuditEntry[]> {
+export async function getAuditEntries2(hash: string): Promise<AuditEntry[]> {
     const contract = await initContract()
     const insertedLogs = await contract.queryFilter(contract.filters.AuditLogged())
 
@@ -53,6 +53,24 @@ export async function getAuditEntries(hash: string): Promise<AuditEntry[]> {
             accessType: decoded.accessType
         };
     })
+}
+
+export async function getAuditEntries(epdId: string): Promise<AuditEntry[]> {
+    let logs = []
+    if (!contract) await initContract()
+    try {
+        const count = await contract!.getEpdLogCount(epdId)
+        logs = await Promise.all(
+            Array.from({ length: Number(count) }, (_, i) =>
+            contract!.getEpdLogByIndex(epdId, i)
+        )
+    )
+    
+    }catch(e: any) {
+        console.log(e.message);
+    }
+
+    return logs
 }
 
 export async function writeAccess(hash: string): Promise<void> {

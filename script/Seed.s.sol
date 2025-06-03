@@ -85,7 +85,7 @@ contract SeedAudit is Script {
         Audit audit = Audit(vm.envAddress("CONTRACT_ADDRESS"));
 
         for (uint256 i = 0; i < data.length; i++) {
-            audit.addAuditLog(data[i].accessorId, data[i].epdId, data[i].accessType);
+            audit.addAuditLog(data[i].accessorId, data[i].epdId, data[i].accessType, keccak256("data"));
         }
 
         console.log("Seeding complete. Audit CA:", address(audit));

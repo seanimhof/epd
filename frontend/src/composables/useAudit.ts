@@ -10,7 +10,7 @@ type AuditEvent = {
   txHash: string
   blockNumber: number
   timestamp: bigint
-  accessorId: string
+  accessorWallet: string
   epdId: string
   accessType: string
   dataHash: string
@@ -41,7 +41,7 @@ export function useAudit() {
         txHash: log.transactionHash,
         blockNumber: log.blockNumber,
         timestamp: decoded.timestamp,
-        accessorId: decoded.accessorId,
+        accessorWallet: decoded.accessorWallet,
         epdId: decoded.epdId,
         accessType: decoded.accessType,
         dataHash: decoded.dataHash
@@ -53,7 +53,7 @@ export function useAudit() {
     if (!contract || !provider) return
     
 
-    contract.on("AuditLogged", async (timestamp, accessorId, epdId, accessType, dataHash, payload) => {
+    contract.on("AuditLogged", async (timestamp, accessorWallet, epdId, accessType, dataHash, payload) => {
 
       if (entries.value.find(e => e.dataHash === dataHash)) return
 
@@ -63,7 +63,7 @@ export function useAudit() {
         txHash: payload.log.transactionHash,
         blockNumber: payload.log.blockNumber,
         timestamp: timestamp,
-        accessorId: accessorId,
+        accessorWallet: accessorWallet,
         epdId: epdId,
         accessType: accessType,
         dataHash: dataHash

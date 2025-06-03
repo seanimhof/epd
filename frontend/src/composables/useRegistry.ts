@@ -11,6 +11,7 @@ type EPDEvent = {
   txHash: string
   blockNumber: number
   blockTimestamp: number
+  userId: string
   epdProviderName: string
   epdContactInfo: string
 };
@@ -43,8 +44,9 @@ export function useRegistry() {
       if(!timestamp) continue
       entries.value.push({
         eventType: "insert",
-        epdProviderName: decoded[1].epdProviderName,
-        epdContactInfo: decoded[1].contactInfo,
+        userId: decoded[1],
+        epdProviderName: decoded[2].epdProviderName,
+        epdContactInfo: decoded[2].contactInfo,
         txHash: log.transactionHash,
         blockNumber: log.blockNumber,
         blockTimestamp: timestamp,
@@ -57,8 +59,9 @@ export function useRegistry() {
       if(!timestamp) continue
       entries.value.push({
         eventType: "update",
-        epdProviderName: decoded[1].epdProviderName,
-        epdContactInfo: decoded[1].contactInfo,
+        userId: decoded[1],
+        epdProviderName: decoded[2].epdProviderName,
+        epdContactInfo: decoded[2].contactInfo,
         txHash: log.transactionHash,
         blockNumber: log.blockNumber,
         blockTimestamp: timestamp
@@ -71,8 +74,9 @@ export function useRegistry() {
       if(!timestamp) continue
       entries.value.push({
         eventType: "delete",
-        epdProviderName: decoded[1].epdProviderName,
-        epdContactInfo: decoded[1].contactInfo,
+        userId: decoded[1],
+        epdProviderName: decoded[2].epdProviderName,
+        epdContactInfo: decoded[2].contactInfo,
         txHash: log.transactionHash,
         blockNumber: log.blockNumber,
         blockTimestamp: timestamp
@@ -92,11 +96,14 @@ export function useRegistry() {
       const timestamp = await getTimestamp(event.log.blockNumber)
       if(!timestamp) return
 
+      if (entries.value.find(e => e.txHash === indexed.hash)) return
+
       entries.value.push({
         eventType: "insert",
         txHash: indexed.hash,
         blockNumber: event.log.blockNumber,
         blockTimestamp: timestamp,
+        userId: "a",
         epdProviderName: payload.epdProviderName,
         epdContactInfo: payload.contactInfo
       });
@@ -111,11 +118,14 @@ export function useRegistry() {
       const timestamp = await getTimestamp(event.log.blockNumber)
       if(!timestamp) return
 
+      if (entries.value.find(e => e.txHash === indexed.hash)) return
+
       entries.value.push({
         eventType: "update",
         txHash: indexed.hash,
         blockNumber: event.log.blockNumber,
         blockTimestamp: timestamp,
+        userId: "a",
         epdProviderName: payload.epdProviderName,
         epdContactInfo: payload.contactInfo
       });
@@ -130,11 +140,14 @@ export function useRegistry() {
       const timestamp = await getTimestamp(event.log.blockNumber)
       if(!timestamp) return
 
+      if (entries.value.find(e => e.txHash === indexed.hash)) return
+
       entries.value.push({
         eventType: "delete",
         txHash: indexed.hash,
         blockNumber: event.log.blockNumber,
         blockTimestamp: timestamp,
+        userId: "a",
         epdProviderName: payload.epdProviderName,
         epdContactInfo: payload.contactInfo
       });

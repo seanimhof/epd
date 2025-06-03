@@ -56,7 +56,7 @@
         <h3 class="text-xl font-semibold mb-4">Zugriffsverlauf</h3>
         <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
           <li v-for="(entry, index) in auditEntries" :key="index">
-            {{ entry.Timestamp.toLocaleString() }} – Zugriff durch {{ entry.Initiator }} ({{ accessTypeGerman(entry.accessType) }})
+            {{ formatTimestamp(entry[0]) }} – Zugriff durch {{ entry[1] }} ({{ accessTypeGerman(entry[3]) }}) - Daten Hash: {{ entry[4] }}
           </li>
         </ul>
       </div>
@@ -140,6 +140,9 @@ import { deleteEPD, updateEPD } from '@/services/registryService'
     await reloadAuditLog()
     setTimeout(() => (uploadMessage.value = ''), 3000)
   }
+
+  const formatTimestamp = (ts: bigint) => new Date(Number(ts) * 1000).toLocaleString("de-CH", { timeZone: "Europe/Zurich", dateStyle: "medium", timeStyle: "short" })
+
   
   async function reloadAuditLog() {
     try {

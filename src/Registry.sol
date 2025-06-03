@@ -9,9 +9,9 @@ contract Registry {
         bool exist;
     }
 
-    event EPDInserted(string indexed id, Record record);
-    event EPDUpdated(string indexed id, Record record);
-    event EPDDeleted(string indexed id, Record record);
+    event EPDInserted(string indexed indexed_id, string id, Record record);
+    event EPDUpdated(string indexed indexed_id, string id, Record record);
+    event EPDDeleted(string indexed indexecd_id, string id, Record record);
 
     mapping(bytes32 => Record) private epdRegistry;
 
@@ -23,21 +23,24 @@ contract Registry {
     function insertEPD(bytes32 _id, string calldata _epdProviderName, string calldata _contactInfo) public {
         require(!epdRegistry[_id].exist, "EPD with this ID already exists");
         epdRegistry[_id] = Record({epdProviderName: _epdProviderName, contactInfo: _contactInfo, exist: true});
-        emit EPDInserted(string.concat("0x", toHexString(_id)), epdRegistry[_id]);
+        string memory hexId = string.concat("0x", toHexString(_id));
+        emit EPDInserted(hexId, hexId, epdRegistry[_id]);
     }
 
     function updateEPD(bytes32 _id, string calldata _epdProviderName, string calldata _contactInfo) public {
         require(epdRegistry[_id].exist, "ID not found");
         epdRegistry[_id].epdProviderName = _epdProviderName;
         epdRegistry[_id].contactInfo = _contactInfo;
-        emit EPDUpdated(string.concat("0x", toHexString(_id)), epdRegistry[_id]);
+        string memory hexId = string.concat("0x", toHexString(_id));
+        emit EPDUpdated(hexId, hexId, epdRegistry[_id]);
     }
 
     function deleteEPD(bytes32 _id) public {
         require(epdRegistry[_id].exist, "EPD with this ID not found");
         Record memory record = epdRegistry[_id];
         delete epdRegistry[_id];
-        emit EPDDeleted(string.concat("0x", toHexString(_id)), record);
+        string memory hexId = string.concat("0x", toHexString(_id));
+        emit EPDDeleted(hexId, hexId, record);
     }
 
     function toHexString(bytes32 data) internal pure returns (string memory) {

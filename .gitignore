@@ -20,3 +20,5 @@ registry_abi.json
 
 anvil_output.log
 anvil.log
+
+run-*.json
