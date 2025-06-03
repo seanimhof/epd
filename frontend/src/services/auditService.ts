@@ -30,11 +30,11 @@ export enum AccessType {
 
 export interface AuditEntry {
     Initiator: string;
-    Timestamp: Date;
+    Timestamp: string;
     accessType: AccessType; // Using the enum here
 }
 
-const formatTimestamp = (timestamp: bigint) => {
+const formatTimestamp = (timestamp: bigint): string => {
     return new Date(Number(timestamp) * 1000).toLocaleString("de-CH", {
         timeZone: "Europe/Zurich",
         dateStyle: "medium",
