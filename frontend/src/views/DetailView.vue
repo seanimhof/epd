@@ -80,7 +80,7 @@
         </div>
   
         <div class="text-center mt-8">
-          <RouterLink to="/" class="text-sm text-blue-600 hover:underline">Zurück zur Suche</RouterLink>
+          <RouterLink to="/search" class="text-sm text-blue-600 hover:underline">Zurück zur Suche</RouterLink>
         </div>
       </div>
     </div>

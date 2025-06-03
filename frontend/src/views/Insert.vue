@@ -66,6 +66,7 @@
   import { ref } from 'vue'
   import { useToast } from 'vue-toast-notification'
   import { useRouter } from 'vue-router'
+import { insertEPD } from '@/services/registryService'
 
   const $router = useRouter()
   const $toast = useToast()
@@ -90,22 +91,14 @@
       $toast.error('Bitte alle Felder ausfüllen.')
       return
     }
-  
+    $toast.info('EPD-Daten werden eingetragen, dies kann einen Moment dauern.')
     try {
-        
-       
+        await insertEPD(ahvNummer.value, geburtsdatum.value, epdStamm.value, epdKontakt.value);
+        $toast.success('EPD-Daten erfolgreich eingetragen. Sie werden weitergeleitet')
         await $router.push({ path: '/search' })
     } catch (error) {
         $toast.error('Eintragen fehlgeschlagen: ' + error)
     }
-    // Optional: Send to smart contract here.
-  
-    $toast.success('EPD-Daten erfolgreich eingetragen (Demo).')
-    // Clear fields
-    ahvNummer.value = ''
-    geburtsdatum.value = ''
-    epdStamm.value = ''
-    epdKontakt.value = ''
   }
   </script>
   
