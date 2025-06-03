@@ -10,7 +10,7 @@
       <span>
         Keine Wallet gefunden, <br />
         installiere
-        <a href="https://metamask.io" target="_blank" class="underline font-bold">MetaMask</a>
+        <a href="https://metamask.io/download" target="_blank" class="underline font-bold">MetaMask</a>
         um fortzufahren.
       </span>
     </div>
