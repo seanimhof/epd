@@ -22,7 +22,7 @@ async function initContract(): Promise<Contract> {
     return initPromise
 }
 
-function hashIdentity(ahv: string, birthdate: string): string {
+export function hashIdentity(ahv: string, birthdate: string): string {
     return keccak256(toUtf8Bytes(ahv + birthdate))
 }
 

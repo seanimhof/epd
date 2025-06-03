@@ -4,6 +4,7 @@ import Registry from '../views/Registry.vue'
 import Audit from '../views/Audit.vue'
 import Search from '@/views/Search.vue'
 import Insert from '@/views/Insert.vue'
+import DetailView from '@/views/DetailView.vue'
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -31,6 +32,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/insert',
     name: "Insert",
     component: Insert
+  },
+  {
+    path: '/epd/:id',
+    name: 'epd-detail',
+    component: DetailView,
+    props: true
   }
 ]
 
