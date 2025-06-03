@@ -5,14 +5,10 @@ import Audit from '../views/Audit.vue'
 import Search from '@/views/Search.vue'
 import Insert from '@/views/Insert.vue'
 import DetailView from '@/views/DetailView.vue'
+import Login from '@/views/Login.vue'
 
 
 const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    name: 'Home',
-    component: HomePage
-  },
   {
     path: '/registry',
     name: 'Registry',
@@ -34,11 +30,17 @@ const routes: Array<RouteRecordRaw> = [
     component: Insert
   },
   {
-    path: '/epd/:id',
+    path: '/detail/:id',
     name: 'epd-detail',
     component: DetailView,
     props: true
-  }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+  { path: '/', redirect: '/login' },
 ]
 
 const router = createRouter({

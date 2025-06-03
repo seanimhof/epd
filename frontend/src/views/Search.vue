@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-100">
     <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
-      <h2 class="text-2xl font-bold mb-6 text-center">EPD öffnen</h2>
+      <h2 class="text-2xl font-bold mb-6 text-center">EPD suchen</h2>
 
       <form @submit.prevent="openEPD" class="space-y-4">
         <div>
@@ -100,10 +100,14 @@ async function openEPD() {
   const hash = keccak256(toUtf8Bytes(ahvNummer.value + geburtsdatum.value))
 
   try {
-    const [stamm, kontakt] = await searchEPD(ahvNummer.value, geburtsdatum.value)
+    const [stamm, kontakt] = [true, true] //await searchEPD(ahvNummer.value, geburtsdatum.value)
 
     if (stamm && kontakt) {
-      router.push(`/epd/${hash}`)
+      $toast.info(`Zugriffsberechtigung zu Demozwecken nicht implementiert`)
+      setTimeout(() => {
+        router.push(`/detail/${hash}`)
+      },100);
+      
     } else {
       $toast.error('Kein EPD gefunden.')
     }
