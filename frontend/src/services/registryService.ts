@@ -38,14 +38,12 @@ export async function insertEPD(ahv: string, birthdate: string, stamm: string, k
     await contract.insertEPD(hash, stamm, kontakt)
 }
 
-export async function updateEPD(ahv: string, birthdate: string, newStamm: string, newKontakt: string): Promise<void> {
+export async function updateEPD(hash: string, newStamm: string, newKontakt: string): Promise<void> {
     const contract = await initContract()
-    const hash = hashIdentity(ahv, birthdate)
     await contract.updateEPD(hash, newStamm, newKontakt)
 }
 
-export async function deleteEPD(ahv: string, birthdate: string): Promise<void> {
+export async function deleteEPD(hash: string): Promise<void> {
     const contract = await initContract()
-    const hash = hashIdentity(ahv, birthdate)
     await contract.deleteEPD(hash)
 }

@@ -100,13 +100,18 @@ async function openEPD() {
   const hash = keccak256(toUtf8Bytes(ahvNummer.value + geburtsdatum.value))
 
   try {
-    const [stamm, kontakt] = [true, true] //await searchEPD(ahvNummer.value, geburtsdatum.value)
+    const [stamm, kontakt] = await searchEPD(ahvNummer.value, geburtsdatum.value)
 
     if (stamm && kontakt) {
-      $toast.info(`Zugriffsberechtigung zu Demozwecken nicht implementiert`)
+      const contactToast = $toast.info(`Kontaktiere Stammgemeinschaft: ${stamm}, ${kontakt}`)
       setTimeout(() => {
-        router.push(`/detail/${hash}`)
-      },100);
+        contactToast.dismiss();
+        const loginToast = $toast.success("Login bestätigt, EPD wird geöffnet");
+        setTimeout(() => {
+          loginToast.dismiss()
+          router.push(`/detail/${hash}`)
+        }, 1000);
+      },1000);
       
     } else {
       $toast.error('Kein EPD gefunden.')
