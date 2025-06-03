@@ -126,7 +126,7 @@ import { deleteEPD, updateEPD } from '@/services/registryService'
   })
   
   async function downloadDocument(doc: { name: string }) {
-    await readAccess()
+    await readAccess(id)
     await reloadAuditLog()
     $toast.success(`'${doc.name}' wird heruntergeladen (Demo)`)
   }
@@ -136,7 +136,7 @@ import { deleteEPD, updateEPD } from '@/services/registryService'
     if (!file) return
     documents.value.push({ name: file.name })
     uploadMessage.value = `'${file.name}' erfolgreich hochgeladen (Demo)`
-    await writeAccess()
+    await writeAccess(id)
     await reloadAuditLog()
     setTimeout(() => (uploadMessage.value = ''), 3000)
   }
