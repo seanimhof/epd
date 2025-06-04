@@ -7,6 +7,7 @@ import Insert from '@/views/Insert.vue'
 import DetailView from '@/views/DetailView.vue'
 import Login from '@/views/Login.vue'
 import AuditView from '@/views/AuditView.vue'
+import Anleitung from '@/views/Anleitung.vue'
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -19,6 +20,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/audit',
     name: 'Audit',
     component: Audit
+  },
+  {
+    path: '/anleitung',
+    name: 'Anleitung',
+    component: Anleitung
   },
   {
     path: '/audit/:id',

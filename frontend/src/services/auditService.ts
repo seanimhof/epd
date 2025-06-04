@@ -1,6 +1,7 @@
 import { Contract, BrowserProvider, keccak256, toUtf8Bytes } from 'ethers'
 import abi from '@/contracts/audit_abi.json'
 import addresses from '@/contracts/addresses.json'
+import { getCurrentUser } from './userService'
 
 const CONTRACT_ADDRESS = addresses.audit
 
@@ -86,7 +87,7 @@ export function hashData(data: string): string {
 
 // Shared logging function
 async function logAccess(type: AccessType, hash: string, dataHash: string): Promise<void> {
-    const accessor = localStorage.getItem('Role')
+    const accessor = getCurrentUser()?.id
     const contract = await initContract()
     const tx = await contract.addAuditLog(accessor, hash, type, dataHash)
     await tx.wait()

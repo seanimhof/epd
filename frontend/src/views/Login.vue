@@ -11,11 +11,12 @@
       </div>
 
       <button
-        v-if="role !== 'oeffentlich'"
+        v-if="getCurrentUser()?.isArzt"
         @click="openEPD()"
+        :disabled="isLoading"
         class="w-full bg-green-600 text-white py-2 mb-4 rounded hover:bg-green-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
       >
-        Zugriff beantragen
+        Dossier öffnen
       </button>
 
         <button
@@ -34,6 +35,7 @@
 <script setup lang="ts">
 import { hashData, readAccess } from '@/services/auditService'
 import { searchEPD } from '@/services/registryService'
+import { getCurrentUser } from '@/services/userService'
 import { onMounted, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
@@ -41,11 +43,10 @@ import { useToast } from 'vue-toast-notification'
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
+const isLoading = ref(false)
 
 const id = route.params.id as string
 const epdData = ref<{ stamm?: string, kontakt?: string } | null>(null)
-const role = ref<'oeffentlich' | 'Professor Dr. Franke'>(localStorage.getItem('Role') as 'oeffentlich' | 'Professor Dr. Franke' || 'oeffentlich')
-
 onMounted(async () => {
   try {
     const [stamm, kontakt] = await searchEPD(id)
@@ -61,13 +62,19 @@ onMounted(async () => {
 })
 
 async function openEPD() {
+  isLoading.value = true
   toast.info("EPD-Anbieter wird kontaktiert")
 
   setTimeout(async () => {
     toast.info("Zugriff wird in Blockchain protokolliert")
 
+    const userInteraction = toast.warning( "Bevor das Dossier geöffnet werden kann, musst du deine Anfrage via Metamask signieren werden.", {
+      duration: 0
+    })
+
     try {
-      await readAccess(id, hashData(role.value))
+      await readAccess(id, hashData(getCurrentUser()!.id))
+      userInteraction.dismiss()
       toast.info("Zugriff bestätigt, EPD wird geöffnet")
 
       setTimeout(() => {
@@ -76,6 +83,8 @@ async function openEPD() {
     } catch (error) {
       console.error(error)
       toast.error("Zugriff fehlgeschlagen")
+      isLoading.value = false;
+      userInteraction.dismiss()
     }
   }, 1000)
 }

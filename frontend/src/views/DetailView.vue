@@ -1,11 +1,11 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-    <div  v-if="role !== 'oeffentlich'" class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-4xl">
+    <div  v-if="getCurrentUser()?.isArzt" class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-4xl">
       <h2 class="text-2xl font-bold mb-6 text-center">EPD-Details</h2>
 
       <div v-if="loading" class="text-center text-gray-500 dark:text-gray-400">Lade Daten...</div>
       <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        
+
         <!-- Patient information -->
         <div>
           <h3 class="text-xl font-semibold mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">Patienteninformationen</h3>
@@ -38,7 +38,7 @@
             </li>
           </ul>
 
-
+          <!-- Neues Dokument hochladen -->
           <div class="border-t border-gray-300 dark:border-gray-600 pt-6">
             <h4 class="text-xl font-semibold mb-4">Neues Dokument hochladen</h4>
 
@@ -52,15 +52,27 @@
                   class="hidden"
                 />
               </label>
+
+              <p v-if="pendingFile" class="text-sm text-gray-700 dark:text-gray-300">
+                Ausgewählte Datei: <strong>{{ pendingFile.name }}</strong>
+              </p>
+
+              <button
+                v-if="pendingFile"
+                @click="saveAndCloseUpload"
+                class="bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition duration-200"
+              >
+                Speichern
+              </button>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Kontaktinformationen -->
-      <div class="mt-10" v-if="editingContact" >
+      <div class="mt-10" v-if="editingContact">
         <h3 class="text-xl font-semibold mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">Kontaktinformationen</h3>
-        
+
         <div class="space-y-4">
           <div>
             <label class="block text-sm font-medium">Stammgemeinschaft</label>
@@ -79,34 +91,33 @@
       <!-- Action Buttons -->
       <div class="mt-8 space-y-4">
         <button
-          @click="deleteDossier"
-          class="w-full bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition"
-        >
-          Dossier löschen
-        </button>
-
-        <button
           @click="toggleEditContact"
           class="w-full bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-yellow-700 transition"
         >
           {{ editingContact ? 'Abbrechen' : 'Kontaktdetails anpassen' }}
         </button>
+        <button
+          @click="deleteDossier"
+          class="w-full bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition"
+        >
+          Dossier löschen
+        </button>
       </div>
 
       <!-- Back Link -->
       <div class="text-center mt-8 flex justify-center gap-4">
-        <RouterLink :to="`/open/${id}`"class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
-          Zurück Ansicht
+        <RouterLink :to="`/open/${id}`" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+          Zurück
         </RouterLink>
         <RouterLink :to="`/audit/${id}`" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
           Audit logs ansehen
         </RouterLink>
       </div>
-
     </div>
+
+    <!-- Kein Zugriff -->
     <div v-else class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-4xl">
       <h2 class="text-2xl font-bold mb-6 text-center">Kein Zugriff auf Dossier</h2>
-
     </div>
   </div>
 </template>
@@ -117,7 +128,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
 import { writeAccess, readAccess, hashData } from '@/services/auditService'
 import { deleteEPD as apiDeleteEPD, updateEPD } from '@/services/registryService'
-import { keccak256 } from 'ethers'
+import { getCurrentUser } from '@/services/userService'
 
 const route = useRoute()
 const router = useRouter()
@@ -125,9 +136,8 @@ const toast = useToast()
 
 const id = route.params.id as string
 const loading = ref(true)
-
 const editingContact = ref(false)
-const role = ref<'oeffentlich' | 'Professor Dr. Franke'>(localStorage.getItem('Role') as 'oeffentlich' | 'Professor Dr. Franke' || 'oeffentlich')
+const pendingFile = ref<File | null>(null)
 
 const patient = ref({
   vorname: '',
@@ -175,6 +185,7 @@ function loadEPD() {
 async function downloadDocument(doc: { name: string }) {
   toast.success(`'${doc.name}' wird heruntergeladen (Demo)`)
 }
+
 function saveEPD() {
   const epd = {
     patient: patient.value,
@@ -183,14 +194,23 @@ function saveEPD() {
   localStorage.setItem(`epd_${id}`, JSON.stringify(epd))
 }
 
-async function handleUpload(event: Event) {
+function handleUpload(event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (!file) return
+  pendingFile.value = file
+  toast.info(`Datei '${file.name}' ausgewählt. Klicken Sie auf "Speichern und Schliessen".`)
+}
+
+async function saveAndCloseUpload() {
+  const file = pendingFile.value
+  if (!file) return
+
   try {
+    await writeAccess(id, hashData(file.name))
     documents.value.push({ name: file.name + " (" + hashData(file.name) + ")" })
     saveEPD()
-    await writeAccess(id, hashData(file.name))
-    toast.success(`'${file.name}' erfolgreich hochgeladen`)
+    toast.success(`'${file.name}' erfolgreich hochgeladen und gespeichert`)
+    pendingFile.value = null
   } catch (error) {
     toast.error("Dokument konnte nicht hochgeladen werden")
   }
@@ -222,17 +242,14 @@ async function saveKontakt() {
   try {
     await updateEPD(id, kontakt.value.stamm, kontakt.value.url)
     localStorage.setItem(`epd_${id}`, JSON.stringify(epd))
-  
-  toast.success('Kontaktdaten gespeichert')
-  editingContact.value = false
+    toast.success('Kontaktdaten gespeichert')
+    editingContact.value = false
   } catch (error) {
     toast.error('Kontaktdaten konnten nicht angepasst werden')
   }
-  
 }
 
 onMounted(() => {
   loadEPD()
 })
 </script>
-
