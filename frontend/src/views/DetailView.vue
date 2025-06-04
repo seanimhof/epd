@@ -116,7 +116,7 @@ const loading = ref(true)
 const error = ref('')
 const uploadMessage = ref('')
 const editingContact = ref(false)
-const role = ref<'oeffentlich' | 'fachperson'>(localStorage.getItem('Role') as 'oeffentlich' | 'fachperson' || 'oeffentlich')
+const role = ref<'oeffentlich' | 'Professor Dr. Franke'>(localStorage.getItem('Role') as 'oeffentlich' | 'Professor Dr. Franke' || 'oeffentlich')
 
 const patient = ref({
   vorname: '',

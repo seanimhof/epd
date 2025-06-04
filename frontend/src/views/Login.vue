@@ -40,7 +40,7 @@ const toast = useToast()
 
 const id = route.params.id as string
 const epdData = ref<{ stamm?: string, kontakt?: string } | null>(null)
-const role = ref<'oeffentlich' | 'fachperson'>(localStorage.getItem('Role') as 'oeffentlich' | 'fachperson' || 'oeffentlich')
+const role = ref<'oeffentlich' | 'Professor Dr. Franke'>(localStorage.getItem('Role') as 'oeffentlich' | 'Professor Dr. Franke' || 'oeffentlich')
 
 onMounted(async () => {
   try {
