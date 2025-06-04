@@ -74,7 +74,7 @@
   import { useToast } from 'vue-toast-notification'
   import { useRouter } from 'vue-router'
 import { hashIdentity, insertEPD } from '@/services/registryService'
-import { auditCreation } from '@/services/auditService'
+import { auditCreation, hashData } from '@/services/auditService'
 
   const $router = useRouter()
   const $toast = useToast()
@@ -102,7 +102,7 @@ import { auditCreation } from '@/services/auditService'
     $toast.info('EPD-Daten werden eingetragen, dies kann einen Moment dauern.')
     try {
         await insertEPD(ahvNummer.value, geburtsdatum.value, epdStamm.value, epdKontakt.value);
-        await auditCreation(hashIdentity(ahvNummer.value, geburtsdatum.value), "");
+        await auditCreation(hashIdentity(ahvNummer.value, geburtsdatum.value), hashData(""));
 
         const newDossier = { ahv: ahvNummer.value, dob: geburtsdatum.value };
         const epdDossiers = JSON.parse(localStorage.getItem('epd-dossiers') || '[]');
