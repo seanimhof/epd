@@ -103,10 +103,17 @@ import { auditCreation } from '@/services/auditService'
     try {
         await insertEPD(ahvNummer.value, geburtsdatum.value, epdStamm.value, epdKontakt.value);
         await auditCreation(hashIdentity(ahvNummer.value, geburtsdatum.value), "");
+
+        const newDossier = { ahv: ahvNummer.value, dob: geburtsdatum.value };
+        const epdDossiers = JSON.parse(localStorage.getItem('epd-dossiers') || '[]');
+        epdDossiers.push(newDossier);
+        localStorage.setItem('epd-dossiers', JSON.stringify(epdDossiers));
+
         $toast.success('EPD-Daten erfolgreich eingetragen. Sie werden weitergeleitet')
         await $router.push({ path: '/search' })
     } catch (error) {
         $toast.error('Eintragen fehlgeschlagen: ' + error)
+        console.error(error)
     }
   }
   </script>
