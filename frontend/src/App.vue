@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
-const role = ref<'oeffentlich' | 'Professor Dr. Franke' | 'Arzt'>(localStorage.getItem('Role') as 'oeffentlich' | 'Professor Dr. Franke' || 'oeffentlich', 'Arzt')
+const role = ref<'oeffentlich' | 'Professor Dr. Franke' | 'Arzt'>(localStorage.getItem('Role') as 'oeffentlich' | 'Professor Dr. Franke' | 'oeffentlich'| 'Arzt')
 
 // Speichern, wenn sich die Rolle ändert
 watch(role, (newRole) => {
