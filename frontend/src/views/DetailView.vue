@@ -213,10 +213,16 @@ async function saveKontakt() {
     patient: patient.value,
     documents: documents.value,
   }
-  localStorage.setItem(`epd_${id}`, JSON.stringify(epd))
-  updateEPD(id, kontakt.value.stamm, kontakt.value.url)
+  try {
+    await updateEPD(id, kontakt.value.stamm, kontakt.value.url)
+    localStorage.setItem(`epd_${id}`, JSON.stringify(epd))
+  
   toast.success('Kontaktdaten gespeichert')
   editingContact.value = false
+  } catch (error) {
+    toast.error('Kontaktdaten konnten nicht angepasst werden')
+  }
+  
 }
 
 onMounted(() => {
