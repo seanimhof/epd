@@ -5,19 +5,19 @@ contract Audit {
     struct AuditEntry {
         uint256 timestamp;
         string accessorWallet;
-        string epdId;
+        bytes32 epdId;
         string accessType;
         bytes32 dataHash;
     }
 
     mapping(string => uint256[]) public accessorAuditIndexes;
-    mapping(string => uint256[]) public epdAuditIndexes;
+    mapping(bytes32 => uint256[]) public epdAuditIndexes;
 
     AuditEntry[] public auditLogs;
 
-    event AuditLogged(uint256 timestamp, string accessorWallet, string epdId, string accessType, bytes32 dataHash);
+    event AuditLogged(uint256 timestamp, string accessorWallet, bytes32 epdId, string accessType, bytes32 dataHash);
 
-    function addAuditLog(string memory _accessorWallet, string memory _epdId, string memory _accessType, bytes32 _dataHash) public {
+    function addAuditLog(string memory _accessorWallet, bytes32 _epdId, string memory _accessType, bytes32 _dataHash) public {
         auditLogs.push(
             AuditEntry({
                 timestamp: block.timestamp,
@@ -28,7 +28,7 @@ contract Audit {
             })
         );
         accessorAuditIndexes[_accessorWallet].push(auditLogs.length - 1);
-        accessorAuditIndexes[_epdId].push(auditLogs.length - 1);
+        epdAuditIndexes[_epdId].push(auditLogs.length - 1);
         emit AuditLogged(block.timestamp, _accessorWallet, _epdId, _accessType, _dataHash);
     }
 
@@ -44,12 +44,12 @@ contract Audit {
         return auditLogs[accessorAuditIndexes[_accessorWallet][index]];
     }
 
-    function getEpdLogCount(string calldata _epdId) public view returns (uint256) {
-        return accessorAuditIndexes[_epdId].length;
+    function getEpdLogCount(bytes32 _epdId) public view returns (uint256) {
+        return epdAuditIndexes[_epdId].length;
     }
 
-    function getEpdLogByIndex(string calldata _epdId, uint256 index) public view returns (AuditEntry memory) {
-        return auditLogs[accessorAuditIndexes[_epdId][index]];
+    function getEpdLogByIndex(bytes32  _epdId, uint256 index) public view returns (AuditEntry memory) {
+        return auditLogs[epdAuditIndexes[_epdId][index]];
     }
 
 

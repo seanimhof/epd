@@ -62,17 +62,6 @@ async function getExplorerBaseUrl(provider: BrowserProvider): Promise<string | n
      <div v-for="(event, index) in decoratedEntries.slice(-15).reverse()" :key="event.txHash + index" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
       <div class="grid grid-cols-[auto_1fr] gap-x-2 gap-y-0">
 
-        <span class="font-semibold">Block Number:</span>
-        <span>{{ event.blockNumber }}</span>
-
-        <span class="font-semibold">Tx:</span>
-        <span v-if="event.explorerUrl">
-          <a :href="event.explorerUrl" target="_blank" class="text-blue-500 hover:underline">
-            {{ event.txHash.slice(0, 10) }}...
-          </a>
-        </span>
-        <span v-else>{{ event.txHash.slice(0, 10) }}</span>
-
         <span class="font-semibold">Timestamp:</span>
         <span>{{ formatTimestamp(event.timestamp) }}</span>
 
@@ -80,13 +69,21 @@ async function getExplorerBaseUrl(provider: BrowserProvider): Promise<string | n
         <span>{{ event.accessorWallet }}</span>
 
         <span class="font-semibold">EPD ID:</span>
-        <span class="break-all">{{ event.epdId }}</span>
+        <span class="break-all">{{ event.epdId.slice(0,10) }}...{{ event.epdId.slice(-4) }}</span>
 
         <span class="font-semibold">AccessType:</span>
         <span>{{ event.accessType }}</span>
 
-        <span class="font-semibold">Data Hash:</span>
-        <span>{{ event.dataHash.slice(0, 11) }}...</span>
+        <span class="font-semibold">File Hash:</span>
+        <span>{{ event.dataHash.slice(0, 11) }}...{{ event.dataHash.slice(-4) }}</span>
+
+        <span class="font-semibold">Details:</span>
+        <span v-if="event.explorerUrl">
+          <a :href="event.explorerUrl" target="_blank" class="text-blue-500 hover:underline">
+            {{ event.txHash.slice(0, 10) }}...
+          </a>
+        </span>
+        <span v-else>{{ event.txHash.slice(0, 10) }}</span>
       </div>
     </div>
     

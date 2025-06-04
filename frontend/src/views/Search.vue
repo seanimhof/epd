@@ -1,7 +1,5 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-    
-    
     <!-- Fehlermeldung -->
     <div
       v-if="!walletInstalled"
@@ -72,6 +70,22 @@
           </RouterLink>
         </div>
 
+        <!-- Eingefügte Dossiers -->
+        <div class="pt-4 border-t border-gray-300 dark:border-gray-600 mt-4">
+          <h3 class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">Eingefügte Dossiers:</h3>
+          <div class="space-y-1">
+            <button
+              v-for="(dossier, index) in insertedDossiers"
+              :key="index"
+              type="button"
+              @click="fillSample(dossier.ahv, dossier.dob)"
+              class="text-left w-full text-blue-600 dark:text-blue-400 hover:underline text-sm"
+            >
+              {{ dossier.ahv }} – {{ dossier.dob }}
+            </button>
+          </div>
+        </div>
+
         <!-- Demo entries -->
         <div class="pt-4 border-t border-gray-300 dark:border-gray-600 mt-4">
           <h3 class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">Beispiel-Daten:</h3>
@@ -110,6 +124,8 @@ const samples = [
   { ahv: '756.1212.1212.12', birthdate: '1985-06-06' }
 ]
 
+const insertedDossiers = ref([])
+
 function fillSample(ahv: string, birthdate: string) {
   ahvNummer.value = ahv
   geburtsdatum.value = birthdate
@@ -137,9 +153,7 @@ async function openEPD() {
     const [stamm, kontakt] = await searchEPD(hash)
 
     if (stamm && kontakt) {
-      
       router.push(`/open/${hash}`)
-      
     } else {
       $toast.error('Kein EPD gefunden.')
     }
@@ -147,8 +161,13 @@ async function openEPD() {
     $toast.error('Fehler beim Abrufen des EPD.')
   }
 }
+
 const walletInstalled = ref(false)
-onMounted( () => {
-    walletInstalled.value = typeof (window as any).ethereum !== 'undefined'
+onMounted(() => {
+  walletInstalled.value = typeof (window as any).ethereum !== 'undefined'
+
+  // Retrieve inserted dossiers from localStorage
+  const storedDossiers = JSON.parse(localStorage.getItem('epd-dossiers') || '[]')
+  insertedDossiers.value = storedDossiers
 })
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-4xl">
+    <div  v-if="role !== 'oeffentlich'" class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-4xl">
       <h2 class="text-2xl font-bold mb-6 text-center">EPD-Details</h2>
 
       <div v-if="loading" class="text-center text-gray-500 dark:text-gray-400">Lade Daten...</div>
@@ -10,6 +10,7 @@
         <!-- Patient information -->
         <div>
           <h3 class="text-xl font-semibold mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">Patienteninformationen</h3>
+          <p style="word-wrap: break-word;"><span class="font-semibold">ID:</span> {{ id }}</p>
           <p><strong>Vorname:</strong> {{ patient.vorname }}</p>
           <p><strong>Nachname:</strong> {{ patient.nachname }}</p>
           <p><strong>Geburtsdatum:</strong> {{ patient.geburtsdatum }}</p>
@@ -88,9 +89,19 @@
       </div>
 
       <!-- Back Link -->
-      <div class="text-center mt-8">
-        <RouterLink to="/search" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">Zurück zur Suche</RouterLink>
+      <div class="text-center mt-8 flex justify-center gap-4">
+        <RouterLink :to="`/open/${id}`"class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+          Zurück Ansicht
+        </RouterLink>
+        <RouterLink :to="`/audit/${id}`" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+          Audit logs ansehen
+        </RouterLink>
       </div>
+
+    </div>
+    <div v-else class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-4xl">
+      <h2 class="text-2xl font-bold mb-6 text-center">Kein Zugriff auf Dossier</h2>
+
     </div>
   </div>
 </template>
@@ -99,7 +110,7 @@
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
-import { writeAccess, readAccess } from '@/services/auditService'
+import { writeAccess, readAccess, hashData } from '@/services/auditService'
 import { deleteEPD as apiDeleteEPD, updateEPD } from '@/services/registryService'
 
 const route = useRoute()
@@ -111,6 +122,7 @@ const loading = ref(true)
 const error = ref('')
 const uploadMessage = ref('')
 const editingContact = ref(false)
+const role = ref<'oeffentlich' | 'Professor Dr. Franke'>(localStorage.getItem('Role') as 'oeffentlich' | 'Professor Dr. Franke' || 'oeffentlich')
 
 const patient = ref({
   vorname: '',
@@ -156,7 +168,6 @@ function loadEPD() {
 }
 
 async function downloadDocument(doc: { name: string }) {
-  await readAccess(id)
   toast.success(`'${doc.name}' wird heruntergeladen (Demo)`)
 }
 function saveEPD() {
@@ -174,7 +185,7 @@ async function handleUpload(event: Event) {
   documents.value.push({ name: file.name })
   saveEPD()
   uploadMessage.value = `'${file.name}' erfolgreich hochgeladen (Demo)`
-  await writeAccess(id)
+  await writeAccess(id, hashData(file.name))
 
   setTimeout(() => (uploadMessage.value = ''), 3000)
 }

@@ -65,17 +65,11 @@ async function getExplorerBaseUrl(provider: BrowserProvider): Promise<string | n
         <span class="font-semibold">Event Type:</span>
         <span>{{ event.eventType }}</span>
 
-        <span class="font-semibold">Block Number:</span>
-        <span>{{ event.blockNumber }}</span>
+        <span class="font-semibold">Timestamp:</span>
+        <span>{{ formatTimestamp(event.blockTimestamp) }}</span>
 
-        <span class="font-semibold">Tx:</span>
-        <span v-if="event.explorerUrl">
-          <a :href="event.explorerUrl" target="_blank" class="text-blue-500 hover:underline">
-            {{ event.txHash.slice(0, 10) }}...
-          </a>
-        </span>
-        <span v-else>{{ event.txHash.slice(0, 10) }}</span>
-
+        <span class="font-semibold">EPD ID:</span>
+        <span>{{ event.userId.slice(0,10) }}...{{ event.userId.slice(-4) }}</span>
 
         <span class="font-semibold">Provider:</span>
         <span>{{ event.epdProviderName }}</span>
@@ -83,8 +77,13 @@ async function getExplorerBaseUrl(provider: BrowserProvider): Promise<string | n
         <span class="font-semibold">Contact Info:</span>
         <span class="break-all">{{ event.epdContactInfo }}</span>
 
-        <span class="font-semibold">Timestamp:</span>
-        <span>{{ formatTimestamp(event.blockTimestamp) }}</span>
+         <span class="font-semibold">Detail:</span>
+        <span v-if="event.explorerUrl">
+          <a :href="event.explorerUrl" target="_blank" class="text-blue-500 hover:underline">
+            {{ event.txHash.slice(0, 10) }}...
+          </a>
+        </span>
+        <span v-else>{{ event.txHash.slice(0, 10) }}</span>
       </div>
     </div>
     
