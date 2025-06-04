@@ -72,7 +72,6 @@ contract SeedAudit is Script {
         bytes32 epdId;
         string accessType;
         bytes32 dataHash;
-        
     }
 
     SampleAudit[] data;
@@ -96,8 +95,29 @@ contract SeedAudit is Script {
     }
 
     function init() internal {
-        data.push(SampleAudit({accessorId: "Artzt", epdId: keccak256("756.1234.5678.902002-01-01"), accessType: "Create EPD", dataHash: keccak256("aaaaaaaa")}));
-        data.push(SampleAudit({accessorId: "Artzt", epdId: keccak256("756.0987.6543.211999-12-31"), accessType: "Create EPD", dataHash: keccak256("bbbbbbbb")}));
-        data.push(SampleAudit({accessorId: "Professor Dr. Franke", epdId: keccak256("756.1212.1212.121985-06-06"), accessType: "Create EPD", dataHash: keccak256("cccccccc")}));
+        data.push(
+            SampleAudit({
+                accessorId: "Artzt",
+                epdId: keccak256("756.1234.5678.902002-01-01"),
+                accessType: "Create EPD",
+                dataHash: keccak256("aaaaaaaa")
+            })
+        );
+        data.push(
+            SampleAudit({
+                accessorId: "Artzt",
+                epdId: keccak256("756.0987.6543.211999-12-31"),
+                accessType: "Create EPD",
+                dataHash: keccak256("bbbbbbbb")
+            })
+        );
+        data.push(
+            SampleAudit({
+                accessorId: "Professor Dr. Franke",
+                epdId: keccak256("756.1212.1212.121985-06-06"),
+                accessType: "Create EPD",
+                dataHash: keccak256("cccccccc")
+            })
+        );
     }
 }
