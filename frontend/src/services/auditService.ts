@@ -86,7 +86,7 @@ export function hashData(data: string): string {
 
 // Shared logging function
 async function logAccess(type: AccessType, hash: string, dataHash: string): Promise<void> {
-    const accessor = await getCurrentAddress()
+    const accessor = localStorage.getItem('Role')
     const contract = await initContract()
     const tx = await contract.addAuditLog(accessor, hash, type, dataHash)
     await tx.wait()
