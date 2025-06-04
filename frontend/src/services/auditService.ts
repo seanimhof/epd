@@ -62,11 +62,11 @@ export async function getAuditEntries(epdId: string): Promise<AuditEntry[]> {
         const count = await contract!.getEpdLogCount(epdId)
         logs = await Promise.all(
             Array.from({ length: Number(count) }, (_, i) =>
-            contract!.getEpdLogByIndex(epdId, i)
+                contract!.getEpdLogByIndex(epdId, i)
+            )
         )
-    )
-    
-    }catch(e: any) {
+
+    } catch (e: any) {
         console.log(e.message);
     }
 

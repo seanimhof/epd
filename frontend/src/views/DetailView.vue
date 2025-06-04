@@ -51,16 +51,6 @@
         </div>
       </div>
 
-      <!-- Access Log -->
-      <div class="mt-10 border-t border-gray-300 dark:border-gray-600 pt-6">
-        <h3 class="text-xl font-semibold mb-4">Zugriffsverlauf</h3>
-        <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-          <li v-for="(entry, index) in auditEntries" :key="index">
-            {{ formatTimestamp(entry[0]) }} – Zugriff durch {{ entry[1] }} ({{ accessTypeGerman(entry[3]) }}) - Daten Hash: {{ entry[4] }}
-          </li>
-        </ul>
-      </div>
-
       <!-- Action Buttons -->
       <div class="mt-8 space-y-4">
         <button
@@ -90,18 +80,18 @@
   import { onMounted, ref } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import { useToast } from 'vue-toast-notification'
-  import { writeAccess, readAccess, emergencyAccess, getAuditEntries, AccessType } from '@/services/auditService'
-import { deleteEPD, updateEPD } from '@/services/registryService'
+  import { writeAccess, readAccess, AccessType } from '@/services/auditService'
+import { deleteEPD } from '@/services/registryService'
   
   const route = useRoute()
   const $router = useRouter()
   const $toast = useToast()
   
   const id = route.params.id as string
-  const loading = ref(true)
+  const loading = ref(false)
   const error = ref('')
   const uploadMessage = ref('')
-  const auditEntries = ref<any[]>([])
+
   
   const patient = ref({
     vorname: 'Max',
@@ -115,19 +105,9 @@ import { deleteEPD, updateEPD } from '@/services/registryService'
     { name: 'Blutwerte_2024.pdf' }
   ])
   
-  onMounted(async () => {
-    try {
-      auditEntries.value = await getAuditEntries(id)
-    } catch (err) {
-      error.value = 'EPD konnte nicht geladen werden.'
-    } finally {
-      loading.value = false
-    }
-  })
   
   async function downloadDocument(doc: { name: string }) {
     await readAccess(id)
-    await reloadAuditLog()
     $toast.success(`'${doc.name}' wird heruntergeladen (Demo)`)
   }
   
@@ -137,34 +117,8 @@ import { deleteEPD, updateEPD } from '@/services/registryService'
     documents.value.push({ name: file.name })
     uploadMessage.value = `'${file.name}' erfolgreich hochgeladen (Demo)`
     await writeAccess(id)
-    await reloadAuditLog()
     setTimeout(() => (uploadMessage.value = ''), 3000)
   }
-
-  const formatTimestamp = (ts: bigint) => new Date(Number(ts) * 1000).toLocaleString("de-CH", { timeZone: "Europe/Zurich", dateStyle: "medium", timeStyle: "short" })
-
-  
-  async function reloadAuditLog() {
-    try {
-      auditEntries.value = await getAuditEntries(id)
-    } catch (err) {
-      console.error('Failed to reload audit log:', err)
-    }
-  }
-  
-  function accessTypeGerman(accessType: AccessType): string {
-    switch (accessType) {
-      case AccessType.Read:
-        return 'Lesen';
-      case AccessType.Write:
-        return 'Schreiben';
-      case AccessType.Emergency:
-        return 'Notfall';
-      default:
-        return '';
-    }
-  }
-  
   async function deleteDossier() {
     const confirmDelete = window.confirm('Möchten Sie das Dossier wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')
     if (confirmDelete) {
