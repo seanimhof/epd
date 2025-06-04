@@ -28,6 +28,14 @@
     </div>
     
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 w-full max-w-md">
+      <!-- Neuer Titel und Hinweis -->
+      <h1 class="text-3xl font-bold text-center mb-4">Willkommen zur Demo</h1>
+      <p class="text-center text-sm text-gray-700 dark:text-gray-300 mb-6">
+        Ist dies dein erster Besuch, so empfehlen wir dir die Anleitung
+        <RouterLink to="/anleitung" class="underline text-blue-600 dark:text-blue-400 font-medium">hier</RouterLink>
+        anzusehen.
+      </p>
+
       <h2 class="text-2xl font-bold mb-6 text-center">EPD suchen</h2>
 
       <form @submit.prevent="openEPD" class="space-y-4">
@@ -64,7 +72,7 @@
         </button>
 
         <!-- Insert Link -->
-        <div class="pt-4 text-center">
+        <div class="pt-4 text-center" v-if="getCurrentUser()?.isArzt">
           <RouterLink to="/insert" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
             Noch nicht eingetragen?
           </RouterLink>
@@ -112,6 +120,7 @@ import { keccak256, toUtf8Bytes } from 'ethers'
 import { useToast } from 'vue-toast-notification'
 import { useRouter } from 'vue-router'
 import { searchEPD } from '@/services/registryService'
+import { getCurrentUser } from '@/services/userService'
 
 const ahvNummer = ref('')
 const geburtsdatum = ref('')
