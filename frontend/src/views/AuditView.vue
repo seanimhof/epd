@@ -20,6 +20,9 @@
           Zugriff durch <span class="font-semibold">{{ entry[1] }}</span>
           ({{ accessTypeGerman(entry[3]) }})
         </div>
+        <div v-if="accessTypeGerman(entry[3])  == 'Schreiben'" class="text-sm text-gray-700 dark:text-gray-300">
+          Dokument Hash: {{ entry[4] }}
+        </div>
       </li>
       </ul>
     </div>
