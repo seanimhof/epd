@@ -17,7 +17,9 @@ contract Audit {
 
     event AuditLogged(uint256 timestamp, string accessorWallet, bytes32 epdId, string accessType, bytes32 dataHash);
 
-    function addAuditLog(string memory _accessorWallet, bytes32 _epdId, string memory _accessType, bytes32 _dataHash) public {
+    function addAuditLog(string memory _accessorWallet, bytes32 _epdId, string memory _accessType, bytes32 _dataHash)
+        public
+    {
         auditLogs.push(
             AuditEntry({
                 timestamp: block.timestamp,
@@ -48,9 +50,7 @@ contract Audit {
         return epdAuditIndexes[_epdId].length;
     }
 
-    function getEpdLogByIndex(bytes32  _epdId, uint256 index) public view returns (AuditEntry memory) {
+    function getEpdLogByIndex(bytes32 _epdId, uint256 index) public view returns (AuditEntry memory) {
         return auditLogs[epdAuditIndexes[_epdId][index]];
     }
-
-
 }
