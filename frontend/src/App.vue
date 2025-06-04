@@ -3,6 +3,11 @@ import { ref, watch } from 'vue'
 
 const role = ref<'oeffentlich' | 'Professor Dr. Franke' | 'Arzt'>(localStorage.getItem('Role') as 'oeffentlich' | 'Professor Dr. Franke' | 'oeffentlich'| 'Arzt')
 
+if (localStorage.getItem('Role') == null) {
+  localStorage.setItem('Role', 'oeffentlich')
+  location.reload()
+}
+
 // Speichern, wenn sich die Rolle ändert
 watch(role, (newRole) => {
   localStorage.setItem('Role', newRole)
