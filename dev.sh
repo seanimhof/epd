@@ -45,6 +45,8 @@ export RPC=$RPC_URL
 echo "Building contracts..."
 forge build --silent
 
+mkdir "frontend/src/contracts/"
+
 echo "Exporting ABIs..."
 jq '.abi' ./out/Registry.sol/Registry.json > "$REGISTRY_JSON"
 jq '.abi' ./out/Audit.sol/Audit.json > "$AUDIT_JSON"
