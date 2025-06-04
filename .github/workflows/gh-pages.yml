@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - readme-update
-      - improvements
+      - improvments
   workflow_dispatch:
 
 permissions:
