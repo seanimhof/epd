@@ -63,7 +63,7 @@ async function openEPD() {
     toast.info("Zugriff wird in Blockchain protokolliert")
 
     try {
-      await readAccess(id)
+      await readAccess(id) //@SEAN: Das tutet noch nicht
       toast.info("Zugriff bestätigt, EPD wird geöffnet")
 
       setTimeout(() => {

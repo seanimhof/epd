@@ -51,6 +51,25 @@
         </div>
       </div>
 
+      <!-- Kontaktinformationen -->
+      <div class="mt-10" v-if="editingContact" >
+        <h3 class="text-xl font-semibold mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">Kontaktinformationen</h3>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium">Stammgemeinschaft</label>
+            <input v-model="kontakt.stamm" type="text" class="mt-1 block w-full px-4 py-2 rounded border dark:bg-gray-700 dark:text-white" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium">Kontaktdetails</label>
+            <input v-model="kontakt.url" type="text" class="mt-1 block w-full px-4 py-2 rounded border dark:bg-gray-700 dark:text-white" />
+          </div>
+
+          <button @click="saveKontakt" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Speichern</button>
+        </div>
+      </div>
+
       <!-- Action Buttons -->
       <div class="mt-8 space-y-4">
         <button
@@ -61,10 +80,10 @@
         </button>
 
         <button
-          @click="editContactDetails"
+          @click="toggleEditContact"
           class="w-full bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-yellow-700 transition"
         >
-          Kontaktdetails anpassen
+          {{ editingContact ? 'Abbrechen' : 'Kontaktdetails anpassen' }}
         </button>
       </div>
 
@@ -76,88 +95,121 @@
   </div>
 </template>
 
-  <script setup lang="ts">
-  import { onMounted, ref } from 'vue'
-  import { useRoute, useRouter } from 'vue-router'
-  import { useToast } from 'vue-toast-notification'
-  import { writeAccess, readAccess, AccessType } from '@/services/auditService'
-import { deleteEPD } from '@/services/registryService'
-  
-  const route = useRoute()
-  const $router = useRouter()
-  const $toast = useToast()
-  
-  const id = route.params.id as string
-  const loading = ref(false)
-  const error = ref('')
-  const uploadMessage = ref('')
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useToast } from 'vue-toast-notification'
+import { writeAccess, readAccess } from '@/services/auditService'
+import { deleteEPD as apiDeleteEPD, updateEPD } from '@/services/registryService'
 
-  
-  const patient = ref({
-    vorname: 'Max',
-    nachname: 'Muster',
-    geburtsdatum: '1990-01-01'
-  })
-  
-  const documents = ref([
-    { name: 'Impfpass.pdf' },
-    { name: 'Röntgenaufnahme.jpg' },
-    { name: 'Blutwerte_2024.pdf' }
-  ])
-  
-  
-  async function downloadDocument(doc: { name: string }) {
-    await readAccess(id)
-    $toast.success(`'${doc.name}' wird heruntergeladen (Demo)`)
+const route = useRoute()
+const router = useRouter()
+const toast = useToast()
+
+const id = route.params.id as string
+const loading = ref(true)
+const error = ref('')
+const uploadMessage = ref('')
+const editingContact = ref(false)
+
+const patient = ref({
+  vorname: '',
+  nachname: '',
+  geburtsdatum: ''
+})
+
+const documents = ref<{ name: string }[]>([])
+
+const kontakt = ref<{ stamm: string, url: string }>({
+  stamm: '',
+  url: ''
+})
+
+function loadEPD() {
+  const epdRaw = localStorage.getItem(`epd_${id}`)
+  if (!epdRaw) {
+    const newEPD = {
+      patient: {
+        vorname: 'Max',
+        nachname: 'Muster',
+        geburtsdatum: '1990-01-01'
+      },
+      documents: [],
+    }
+    localStorage.setItem(`epd_${id}`, JSON.stringify(newEPD))
+    Object.assign(patient.value, newEPD.patient)
+    documents.value = newEPD.documents
+    loading.value = false
+    return
   }
-  
-  async function handleUpload(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0]
-    if (!file) return
-    documents.value.push({ name: file.name })
-    uploadMessage.value = `'${file.name}' erfolgreich hochgeladen (Demo)`
-    await writeAccess(id)
-    setTimeout(() => (uploadMessage.value = ''), 3000)
+
+  try {
+    const epd = JSON.parse(epdRaw)
+    patient.value = epd.patient || { vorname: '', nachname: '', geburtsdatum: '' }
+    documents.value = epd.documents || []
+    kontakt.value = epd.kontakt || { stamm: '', url: '' }
+  } catch (err) {
+    error.value = 'Fehler beim Laden des EPD.'
+  } finally {
+    loading.value = false
   }
-  async function deleteDossier() {
-    const confirmDelete = window.confirm('Möchten Sie das Dossier wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')
-    if (confirmDelete) {
-        try {
-            await deleteEPD(id)
-            $toast.success('Dossier wurde erfolgreich gelöscht.')
-            $router.push({ path: '/search' })
-        } catch (error) {
-            $toast.error('Dossier konnte nicht gelöscht werden')
-        }
-      
+}
+
+async function downloadDocument(doc: { name: string }) {
+  await readAccess(id)
+  toast.success(`'${doc.name}' wird heruntergeladen (Demo)`)
+}
+function saveEPD() {
+  const epd = {
+    patient: patient.value,
+    documents: documents.value,
+  }
+  localStorage.setItem(`epd_${id}`, JSON.stringify(epd))
+}
+
+async function handleUpload(event: Event) {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (!file) return
+
+  documents.value.push({ name: file.name })
+  saveEPD()
+  uploadMessage.value = `'${file.name}' erfolgreich hochgeladen (Demo)`
+  await writeAccess(id)
+
+  setTimeout(() => (uploadMessage.value = ''), 3000)
+}
+
+async function deleteDossier() {
+  const confirmDelete = window.confirm('Möchten Sie das Dossier wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')
+  if (confirmDelete) {
+    try {
+      localStorage.removeItem(`epd_${id}`)
+      await apiDeleteEPD(id)
+      toast.success('Dossier wurde erfolgreich gelöscht.')
+      router.push({ path: '/search' })
+    } catch (error) {
+      toast.error('Dossier konnte nicht gelöscht werden')
     }
   }
-  
-  async function editContactDetails() {
-  
+}
+
+function toggleEditContact() {
+  editingContact.value = !editingContact.value
+}
+
+async function saveKontakt() {
+  const epd = {
+    patient: patient.value,
+    documents: documents.value,
   }
-  </script>
-  
-  <style scoped>
-  /* Custom styling for the delete and edit buttons */
-  .bg-red-600 {
-    background-color: #e53e3e;
-  }
-  
-  .bg-red-600:hover {
-    background-color: #c53030;
-  }
-  
-  .bg-yellow-600 {
-    background-color: #d69e2e;
-  }
-  
-  .bg-yellow-600:hover {
-    background-color: #b7791f;
-  }
-  
-  .shadow-md {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-  }
-  </style>
-  
+  localStorage.setItem(`epd_${id}`, JSON.stringify(epd))
+  updateEPD(id, kontakt.value.stamm, kontakt.value.url)
+  toast.success('Kontaktdaten gespeichert')
+  editingContact.value = false
+}
+
+onMounted(() => {
+  loadEPD()
+})
+</script>
+
