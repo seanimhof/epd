@@ -1,5 +1,34 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    
+    
+    <!-- Fehlermeldung -->
+    <div
+      v-if="!walletInstalled"
+      class="absolute top-20 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-red-600 text-white text-center py-4 px-6 rounded-lg shadow-xl flex items-center justify-center gap-3 z-20 dark:bg-red-800"
+    >
+      <i class="fas fa-exclamation-circle text-2xl"></i>
+      <span>
+        Keine Wallet gefunden, <br />
+        installiere
+        <a href="https://metamask.io/download" target="_blank" class="underline font-bold">MetaMask</a>
+        um fortzufahren.
+      </span>
+    </div>
+
+    <!-- Info Box -->
+    <div
+      v-if="walletInstalled"
+      class="absolute top-20 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-blue-500 text-white text-center py-4 px-6 rounded-lg shadow-xl flex items-center justify-center gap-3 z-20 dark:bg-blue-600"
+    >
+      <i class="fas fa-info-circle text-2xl"></i>
+      <span>
+        MetaMask ist installiert! Lade dein Wallet
+        <a href="https://cloud.google.com/application/web3/faucet/ethereum/sepolia" target="_blank" class="underline font-bold">hier</a>
+        auf.
+      </span>
+    </div>
+    
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 w-full max-w-md">
       <h2 class="text-2xl font-bold mb-6 text-center">EPD suchen</h2>
 
@@ -30,9 +59,10 @@
         <!-- Submit -->
         <button
           type="submit"
-          class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+          class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+          :disabled="!walletInstalled"
         >
-          EPD öffnen
+          EPD suchen
         </button>
 
         <!-- Insert Link -->
@@ -63,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { keccak256, toUtf8Bytes } from 'ethers'
 import { useToast } from 'vue-toast-notification'
 import { useRouter } from 'vue-router'
@@ -102,20 +132,13 @@ async function openEPD() {
   }
 
   const hash = keccak256(toUtf8Bytes(ahvNummer.value + geburtsdatum.value))
-
+  
   try {
-    const [stamm, kontakt] = await searchEPD(ahvNummer.value, geburtsdatum.value)
+    const [stamm, kontakt] = await searchEPD(hash)
 
     if (stamm && kontakt) {
-      const contactToast = $toast.info(`Kontaktiere Stammgemeinschaft: ${stamm}, ${kontakt}`)
-      setTimeout(() => {
-        contactToast.dismiss();
-        const loginToast = $toast.success("Login bestätigt, EPD wird geöffnet");
-        setTimeout(() => {
-          loginToast.dismiss()
-          router.push(`/detail/${hash}`)
-        }, 1000);
-      },1000);
+      
+      router.push(`/open/${hash}`)
       
     } else {
       $toast.error('Kein EPD gefunden.')
@@ -124,4 +147,8 @@ async function openEPD() {
     $toast.error('Fehler beim Abrufen des EPD.')
   }
 }
+const walletInstalled = ref(false)
+onMounted( () => {
+    walletInstalled.value = typeof (window as any).ethereum !== 'undefined'
+})
 </script>

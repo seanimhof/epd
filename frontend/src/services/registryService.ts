@@ -26,9 +26,8 @@ export function hashIdentity(ahv: string, birthdate: string): string {
     return keccak256(toUtf8Bytes(ahv + birthdate))
 }
 
-export async function searchEPD(ahv: string, birthdate: string): Promise<[string, string]> {
+export async function searchEPD(hash: string): Promise<[string, string]> {
     const contract = await initContract()
-    const hash = hashIdentity(ahv, birthdate)
     return contract.searchEPD(hash)
 }
 

@@ -6,6 +6,7 @@ import Search from '@/views/Search.vue'
 import Insert from '@/views/Insert.vue'
 import DetailView from '@/views/DetailView.vue'
 import Login from '@/views/Login.vue'
+import AuditView from '@/views/AuditView.vue'
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -18,6 +19,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/audit',
     name: 'Audit',
     component: Audit
+  },
+  {
+    path: '/audit/:id',
+    name: 'EPDAudit',
+    component: AuditView
   },
   {
     path: '/search',
@@ -36,11 +42,11 @@ const routes: Array<RouteRecordRaw> = [
     props: true
   },
   {
-    path: '/login',
-    name: 'Login',
+    path: '/open/:id',
+    name: 'Open',
     component: Login
   },
-  { path: '/', redirect: '/login' },
+  { path: '/', redirect: '/search' },
 ]
 
 const router = createRouter({
