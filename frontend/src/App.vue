@@ -45,18 +45,20 @@ watch(role, (newRole) => {
             </router-link>
 
             <!-- Rolle Auswahl -->
-            <div>
-              <label for="role-select" class="sr-only">Rolle</label>
-              <select
-                id="role-select"
-                v-model="role"
-                class="px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200"
-              >
-                <option value="oeffentlich">Öffentlich</option>
-                <option value="fachperson">Fachperson</option>
-                <option value="arzt">Arzt</option>
-              </select>
-            </div>
+<!-- Rolle Auswahl -->
+<div class="flex items-center space-x-2">
+  <span class="text-gray-700 dark:text-gray-200">Rolle</span>
+  <select
+    id="role-select"
+    v-model="role"
+    class="px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200"
+  >
+    <option value="oeffentlich">Öffentlich</option>
+    <option value="fachperson">Fachperson</option>
+    <option value="arzt">Arzt</option>
+  </select>
+</div>
+
           </div>
         </div>
       </div>
