@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
-const role = ref<'oeffentlich' | 'fachperson'>('oeffentlich')
+const role = ref<'oeffentlich' | 'fachperson'>(localStorage.getItem('Role') as 'oeffentlich' | 'fachperson' || 'oeffentlich')
+
+// Speichern, wenn sich die Rolle ändert
+watch(role, (newRole) => {
+  localStorage.setItem('Role', newRole)
+  location.reload()
+})
 </script>
+
 
 <template>
   <div class="min-h-screen">
