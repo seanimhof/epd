@@ -24,7 +24,11 @@
           >
             Audit logs ansehen
           </button>
+          <div class="text-center mt-8">
+      <RouterLink to="/search" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">Zurück zur Suche</RouterLink>
+      </div>  
     </div>
+
   </div>
 </template>
 <script setup lang="ts">

@@ -89,9 +89,15 @@
       </div>
 
       <!-- Back Link -->
-      <div class="text-center mt-8">
-        <RouterLink to="/search" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">Zurück zur Suche</RouterLink>
+      <div class="text-center mt-8 flex justify-center gap-4">
+        <RouterLink :to="`/open/${id}`"class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+          Zurück Ansicht
+        </RouterLink>
+        <RouterLink :to="`/audit/${id}`" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+          Audit logs ansehen
+        </RouterLink>
       </div>
+
     </div>
     <div v-else class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-4xl">
       <h2 class="text-2xl font-bold mb-6 text-center">Kein Zugriff auf Dossier</h2>
