@@ -19,7 +19,9 @@ import { useRoute } from 'vue-router'
 
     const route = useRoute()
 
-      
+      function accessTypeGerman(acessType: any): any {
+          return accessType;
+      }
   const id = route.params.id as string
 
 onMounted(async () => {
