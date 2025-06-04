@@ -14,11 +14,11 @@
         class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 shadow-sm"
       >
         <div class="text-sm text-gray-800 dark:text-gray-100 font-medium">
-          {{ formatDate(entry.Timestamp) }}
+          {{ formatDate(entry[0]) }}
         </div>
         <div class="text-sm text-gray-700 dark:text-gray-300">
-          Zugriff durch <span class="font-semibold">{{ entry.Initiator }}</span>
-          ({{ accessTypeGerman(entry.accessType) }})
+          Zugriff durch <span class="font-semibold">{{ entry[1] }}</span>
+          ({{ accessTypeGerman(entry[3]) }})
         </div>
       </li>
       </ul>
@@ -42,12 +42,13 @@ function accessTypeGerman(type: string): string {
     case 'read': return 'Lesen'
     case 'write': return 'Schreiben'
     case 'delete': return 'Löschen'
+    case 'Create EPD': return 'EPD erstellt'
     default: return 'Unbekannt'
   }
 }
 
-function formatDate(timestamp: string): string {
-  const date = new Date(timestamp)
+function formatDate(timestamp: bigint): string {
+  const date = new Date(Number(timestamp))
   return date.toLocaleString('de-CH', {
     day: '2-digit',
     month: '2-digit',
