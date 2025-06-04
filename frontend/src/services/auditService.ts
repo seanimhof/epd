@@ -27,7 +27,7 @@ export enum AccessType {
     Read = 'read',
     Write = 'write',
     Emergency = 'emergency',
-    Create = 'create'
+    Create = 'Create EPD'
 }
 
 export interface AuditEntry {
