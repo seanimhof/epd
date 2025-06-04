@@ -2,14 +2,14 @@
   <div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
     <div  class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-4xl">
       <h2 class="text-2xl font-bold mb-6 text-center">Zugriffsverlauf</h2>
-      <p style="word-wrap: break-word;"><span class="font-semibold">ID:</span> {{ id }}</p>
+      <p class="mb-6 text-center"><span class="font-semibold">Dossier ID:</span> {{ id }}</p>
       <div v-if="auditEntries.length === 0" class="text-gray-500 dark:text-gray-400">
       Keine Zugriffe vorhanden.
       </div>
 
     <ul class="space-y-3">
       <li
-        v-for="(entry, index) in auditEntries"
+        v-for="(entry, index) in sortedAuditEntries"
         :key="index"
         class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 shadow-sm"
       >
@@ -29,10 +29,13 @@
 
 <script setup lang="ts">
 import { getAuditEntries } from '@/services/auditService'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const auditEntries = ref<any[]>([])
+const sortedAuditEntries = computed(() =>
+  [...auditEntries.value].sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
+)
 const error = ref('')
 const route = useRoute()
 const id = route.params.id as string
@@ -48,15 +51,12 @@ function accessTypeGerman(type: string): string {
 }
 
 function formatDate(timestamp: bigint): string {
-  const date = new Date(Number(timestamp))
-  return date.toLocaleString('de-CH', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  })
+  const date = new Date(Number(timestamp) * 1000).toLocaleString("de-CH", {
+  timeZone: "Europe/Zurich",
+  dateStyle: "medium",
+  timeStyle: "medium"
+})
+return date
 }
 
 onMounted(async () => {
