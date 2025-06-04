@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getAllAuditLogsByEpdId } from '@/services/AuditLogs'
+import { getAllAuditLogsByEpdId } from '@/services/auditServices'
 
 // const allLogs = await getAllAuditLogsByEpdId('1111')
 
