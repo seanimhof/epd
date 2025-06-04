@@ -19,8 +19,7 @@ concurrency:
 
 env:
   FOUNDRY_PROFILE: ci
-  REGISTRY_CONTRACT_ADDRESS: ${{ vars.REGISTRY_CONTRACT_ADDRESS }}
-  AUDIT_CONTRACT_ADDRESS: ${{ vars.AUDIT_CONTRACT_ADDRESS }}
+
 jobs:
   build:
     environment: epd
@@ -30,20 +29,22 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
-          ref: ${{github.ref}}
+          ref: ${{ github.ref }}
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
 
       - name: Build forge contracts
-        run: |
-          forge build --silent 
+        run: forge build --silent
+
       - name: Copy ABIs 
         run: |
           mkdir -p frontend/src/contracts
           jq '.abi' ./out/Registry.sol/Registry.json > frontend/src/contracts/registry_abi.json
           jq '.abi' ./out/Audit.sol/Audit.json > frontend/src/contracts/audit_abi.json
-      - name: Deploy contract and export address
+
+      - name: Deploy Registry contract
+        id: deploy_registry
         run: |
           output=$(forge create src/Registry.sol:Registry \
             --rpc-url ${{ secrets.SEPOLIA_RPC }} \
@@ -52,7 +53,8 @@ jobs:
           deployed_address=$(echo "$output" | grep 'Deployed to:' | awk '{ print $3 }')
           echo "REGISTRY_CONTRACT_ADDRESS=$deployed_address" >> $GITHUB_ENV
 
-      - name: Deploy contract and export address
+      - name: Deploy Audit contract
+        id: deploy_audit
         run: |
           output=$(forge create src/Audit.sol:Audit \
             --rpc-url ${{ secrets.SEPOLIA_RPC }} \
@@ -61,14 +63,6 @@ jobs:
           deployed_address=$(echo "$output" | grep 'Deployed to:' | awk '{ print $3 }')
           echo "AUDIT_CONTRACT_ADDRESS=$deployed_address" >> $GITHUB_ENV
 
-      - name: Create Contracts
-        run: |
-          pnpm exec -- node -e "require('fs').writeFileSync('src/contracts/addresses.json', JSON.stringify({ registry: process.env.REGISTRY_CONTRACT_ADDRESS, audit: process.env.AUDIT_CONTRACT_ADDRESS }, null, 2))"
-        working-directory: frontend
-        env:
-          REGISTRY_CONTRACT_ADDRESS: ${{ env.REGISTRY_CONTRACT_ADDRESS }}
-          AUDIT_CONTRACT_ADDRESS: ${{ env.AUDIT_CONTRACT_ADDRESS }}
-  
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -83,14 +77,13 @@ jobs:
         run: pnpm install
         working-directory: frontend
 
-      - name: Create Contracts
+      - name: Create Contracts file with deployed addresses
         run: |
-          pnpm exec -- node -e "require('fs').writeFileSync('src/contracts/addresses.json', JSON.stringify({ registry: process.env.REGISTRY, audit: process.env.AUDIT }, null, 2))"
+          pnpm exec -- node -e "require('fs').writeFileSync('src/contracts/addresses.json', JSON.stringify({ registry: process.env.REGISTRY_CONTRACT_ADDRESS, audit: process.env.AUDIT_CONTRACT_ADDRESS }, null, 2))"
         working-directory: frontend
         env:
-          REGISTRY: ${{ vars.REGISTRY_CONTRACT_ADDRESS }}
-          AUDIT: ${{ vars.AUDIT_CONTRACT_ADDRESS }}
-      
+          REGISTRY_CONTRACT_ADDRESS: ${{ env.REGISTRY_CONTRACT_ADDRESS }}
+          AUDIT_CONTRACT_ADDRESS: ${{ env.AUDIT_CONTRACT_ADDRESS }}
 
       - name: Build with Vite
         run: pnpm build

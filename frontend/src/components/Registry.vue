@@ -62,6 +62,7 @@ const insertEPD = async () => {
     const res = await tx.wait()
     $toast.success('Sucessfully inserted EPD');
   } catch (err: any) {
+    console.log(err)
     if (err?.shortMessage) {
       $toast.error(err.shortMessage);
       console.error("Short message:", err.shortMessage)
