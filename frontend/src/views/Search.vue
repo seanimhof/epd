@@ -78,10 +78,10 @@
               v-for="(dossier, index) in insertedDossiers"
               :key="index"
               type="button"
-              @click="fillSample(dossier.ahv, dossier.dob)"
+              @click="fillSample((dossier as any).ahv, (dossier as any).dob)"
               class="text-left w-full text-blue-600 dark:text-blue-400 hover:underline text-sm"
             >
-              {{ dossier.ahv }} – {{ dossier.dob }}
+              {{ (dossier as any).ahv }} – {{ (dossier as any).dob }}
             </button>
           </div>
         </div>
