@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - readme-update
+      - improvements
   workflow_dispatch:
 
 permissions:
@@ -39,7 +40,10 @@ jobs:
           mkdir -p frontend/src/contracts
           jq '.abi' ./out/Registry.sol/Registry.json > frontend/src/contracts/registry_abi.json
           jq '.abi' ./out/Audit.sol/Audit.json > frontend/src/contracts/audit_abi.json
-         
+      - name: Deploy
+        run: |
+          forge create src/Registry.sol:MyContract --rpc-url ${{ secrets.SEPOLIA_RPC }} --private-key ${{secrets.PRIVATE_KEY}}
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
