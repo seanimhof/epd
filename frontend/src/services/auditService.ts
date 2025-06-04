@@ -32,7 +32,7 @@ export enum AccessType {
 export interface AuditEntry {
     Initiator: string;
     Timestamp: string;
-    accessType: AccessType; // Using the enum here
+    accessType: AccessType;
 }
 
 const formatTimestamp = (timestamp: bigint): string => {
@@ -41,7 +41,14 @@ const formatTimestamp = (timestamp: bigint): string => {
         dateStyle: "medium",
         timeStyle: "short",
     })
-};
+}
+
+async function getCurrentAddress(): Promise<string> {
+    const provider = new BrowserProvider((window as any).ethereum)
+    const signer = await provider.getSigner()
+    return signer.getAddress()
+}
+
 export async function getAuditEntries2(hash: string): Promise<AuditEntry[]> {
     const contract = await initContract()
     const insertedLogs = await contract.queryFilter(contract.filters.AuditLogged())
@@ -49,10 +56,10 @@ export async function getAuditEntries2(hash: string): Promise<AuditEntry[]> {
     return insertedLogs.map(x => {
         const decoded = contract.interface.decodeEventLog("AuditLogged", x.data, x.topics)
         return {
-            Initiator: 'Initiator',
+            Initiator: decoded.accessor, // assuming your contract emits this
             Timestamp: formatTimestamp(decoded.timestamp),
             accessType: decoded.accessType
-        };
+        }
     })
 }
 
@@ -61,15 +68,13 @@ export async function getAuditEntries(epdId: string): Promise<AuditEntry[]> {
     if (!contract) await initContract()
     try {
         const count = await contract!.getEpdLogCount(epdId)
-        console.log(count)
         logs = await Promise.all(
             Array.from({ length: Number(count) }, (_, i) =>
                 contract!.getEpdLogByIndex(epdId, i)
             )
         )
-
     } catch (e: any) {
-        console.log(e.message);
+        console.log(e.message)
     }
 
     return logs
@@ -79,34 +84,23 @@ export function hashData(data: string): string {
     return keccak256(toUtf8Bytes(data))
 }
 
-
-export async function writeAccess(hash: string, dataHash: string): Promise<void> {
-    const accessor = localStorage.getItem('role')
+// Shared logging function
+async function logAccess(type: AccessType, hash: string, dataHash: string): Promise<void> {
+    const accessor = await getCurrentAddress()
     const contract = await initContract()
-    const tx = await contract.addAuditLog(accessor, hash, AccessType.Write, dataHash)
+    const tx = await contract.addAuditLog(accessor, hash, type, dataHash)
     await tx.wait()
 }
 
-export async function readAccess(hash: string, dataHash: string): Promise<void> {
-    const accessor = localStorage.getItem('role')
-    const contract = await initContract()
-    const tx = await contract.addAuditLog(accessor, hash, AccessType.Read, dataHash)
-    await tx.wait()
-}
+// Public API
+export const writeAccess = (hash: string, dataHash: string) =>
+    logAccess(AccessType.Write, hash, dataHash)
 
-export async function emergencyAccess(hash: string, dataHash: string): Promise<void> {
-    const accessor = localStorage.getItem('role')
-    const contract = await initContract()
+export const readAccess = (hash: string, dataHash: string) =>
+    logAccess(AccessType.Read, hash, dataHash)
 
-    const tx = await contract.addAuditLog(accessor, hash, AccessType.Emergency, dataHash)
-    await tx.wait()
-}
+export const emergencyAccess = (hash: string, dataHash: string) =>
+    logAccess(AccessType.Emergency, hash, dataHash)
 
-
-export async function auditCreation(hash: string, dataHash: string): Promise<void> {
-    const accessor = localStorage.getItem('role')
-    const contract = await initContract()
-
-    const tx = await contract.addAuditLog(accessor, hash, AccessType.Create, dataHash)
-    await tx.wait()
-}
+export const auditCreation = (hash: string, dataHash: string) =>
+    logAccess(AccessType.Create, hash, dataHash)
