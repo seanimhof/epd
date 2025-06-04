@@ -46,22 +46,29 @@ jobs:
       - name: Deploy Registry contract
         id: deploy_registry
         run: |
+          echo "Deploying Registry contract..."
           output=$(forge create src/Registry.sol:Registry \
             --rpc-url ${{ secrets.SEPOLIA_RPC }} \
             --private-key ${{ secrets.PRIVATE_KEY }})
+          echo "=== Forge Output ==="
           echo "$output"
           deployed_address=$(echo "$output" | grep 'Deployed to:' | awk '{ print $3 }')
+          echo "Registry deployed at: $deployed_address"
           echo "REGISTRY_CONTRACT_ADDRESS=$deployed_address" >> $GITHUB_ENV
-
+  
       - name: Deploy Audit contract
         id: deploy_audit
         run: |
+          echo "Deploying Audit contract..."
           output=$(forge create src/Audit.sol:Audit \
             --rpc-url ${{ secrets.SEPOLIA_RPC }} \
             --private-key ${{ secrets.PRIVATE_KEY }})
+          echo "=== Forge Output ==="
           echo "$output"
           deployed_address=$(echo "$output" | grep 'Deployed to:' | awk '{ print $3 }')
+          echo "Audit deployed at: $deployed_address"
           echo "AUDIT_CONTRACT_ADDRESS=$deployed_address" >> $GITHUB_ENV
+  
 
       - name: Setup Node
         uses: actions/setup-node@v4

@@ -16,21 +16,18 @@
         <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-md text-center z-10 relative">
           <h2 class="text-2xl font-bold mb-6">Login als Fachperson</h2>
 
-          <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">
-            Als Login würde z.B. <strong>Veridian.ID</strong> verwendet werden,<br />
-            dies ist aber <strong>nicht implementiert</strong>.
-          </p>
-
           <!-- Vorname Feld -->
           <div class="mb-4 text-left">
-            <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Dein Vorname</label>
-            <input
+            <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Anmelden als</label>
+            <select
               v-model="firstName"
               id="firstName"
               type="text"
               class="mt-2 w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="Dein Vorname"
-            />
+            >
+            <option value="Prof. Dr. Müller">Prof. Dr.Müller</option>
+          </select>
           </div>
 
           <div class="mt-6">
@@ -39,7 +36,7 @@
               :disabled="!firstName"
               class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-              Als Fachperson anmelden (Demo)
+              Mit Wallet anmelden
             </button>
           </div>
         </div>
