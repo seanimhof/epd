@@ -8,7 +8,7 @@ import RegistryBlockchain from '@/components/RegistryBlockchain.vue';
 
 <div class="flex flex-col items-center dark:text-white px-4">
 
-    <Registry></Registry>
+    <!-- <Registry></Registry> -->
     <RegistryBlockchain></RegistryBlockchain>
 
   </div>

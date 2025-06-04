@@ -4,14 +4,12 @@ import Registry from '../views/Registry.vue'
 import Audit from '../views/Audit.vue'
 import Search from '@/views/Search.vue'
 import Insert from '@/views/Insert.vue'
+import DetailView from '@/views/DetailView.vue'
+import Login from '@/views/Login.vue'
+import AuditView from '@/views/AuditView.vue'
 
 
 const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    name: 'Home',
-    component: HomePage
-  },
   {
     path: '/registry',
     name: 'Registry',
@@ -23,6 +21,11 @@ const routes: Array<RouteRecordRaw> = [
     component: Audit
   },
   {
+    path: '/audit/:id',
+    name: 'EPDAudit',
+    component: AuditView
+  },
+  {
     path: '/search',
     name: 'Search',
     component: Search
@@ -31,7 +34,19 @@ const routes: Array<RouteRecordRaw> = [
     path: '/insert',
     name: "Insert",
     component: Insert
-  }
+  },
+  {
+    path: '/detail/:id',
+    name: 'epd-detail',
+    component: DetailView,
+    props: true
+  },
+  {
+    path: '/open/:id',
+    name: 'Open',
+    component: Login
+  },
+  { path: '/', redirect: '/search' },
 ]
 
 const router = createRouter({

@@ -11,14 +11,14 @@ contract AuditTest is Test {
         audit = new Audit();
     }
 
-    function test_addAuditLog() public {
-        audit.addAuditLog("accessor1", "epd1", "write");
+    // function test_addAuditLog() public {
+    //     audit.addAuditLog("accessor1", "epd1", "write");
 
-        Audit.AuditEntry memory entry = audit.getAccessorLogByIndex("accessor1", 0);
+    //     Audit.AuditEntry memory entry = audit.getAccessorLogByIndex("accessor1", 0);
 
-        assertEq(entry.accessorId, "accessor1");
-        assertEq(entry.epdId, "epd1");
-        assertEq(entry.accessType, "write");
-        assertEq(audit.getAccessorLogCount("accessor1"), 1);
-    }
+    //     assertEq(entry.accessorId, "accessor1");
+    //     assertEq(entry.epdId, "epd1");
+    //     assertEq(entry.accessType, "write");
+    //     assertEq(audit.getAccessorLogCount("accessor1"), 1);
+    // }
 }

@@ -10,7 +10,7 @@ const $toast = useToast();
 const CONTRACT_ADDRESS = addresses.registry
 
 const epdAhvSearch = ref('756.1234.5678.90')
-const epdBirthdateSearch = ref('01.01.2002')
+const epdBirthdateSearch = ref('2002-01-01')
 const epdId = ref('')
 const searchResult = ref<[string, string]| null>(null)
 

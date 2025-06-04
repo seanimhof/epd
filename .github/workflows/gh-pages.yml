@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - readme-update
+      - improvments
   workflow_dispatch:
 
 permissions:
@@ -27,6 +28,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+          ref: ${{github.ref}}
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
@@ -39,7 +41,10 @@ jobs:
           mkdir -p frontend/src/contracts
           jq '.abi' ./out/Registry.sol/Registry.json > frontend/src/contracts/registry_abi.json
           jq '.abi' ./out/Audit.sol/Audit.json > frontend/src/contracts/audit_abi.json
-         
+      - name: Deploy
+        run: |
+          forge create src/Registry.sol:Registry --rpc-url ${{ secrets.SEPOLIA_RPC }} --private-key ${{secrets.PRIVATE_KEY}}
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:

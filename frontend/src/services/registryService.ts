@@ -22,13 +22,12 @@ async function initContract(): Promise<Contract> {
     return initPromise
 }
 
-function hashIdentity(ahv: string, birthdate: string): string {
+export function hashIdentity(ahv: string, birthdate: string): string {
     return keccak256(toUtf8Bytes(ahv + birthdate))
 }
 
-export async function searchEPD(ahv: string, birthdate: string): Promise<[string, string]> {
+export async function searchEPD(hash: string): Promise<[string, string]> {
     const contract = await initContract()
-    const hash = hashIdentity(ahv, birthdate)
     return contract.searchEPD(hash)
 }
 
@@ -38,14 +37,12 @@ export async function insertEPD(ahv: string, birthdate: string, stamm: string, k
     await contract.insertEPD(hash, stamm, kontakt)
 }
 
-export async function updateEPD(ahv: string, birthdate: string, newStamm: string, newKontakt: string): Promise<void> {
+export async function updateEPD(hash: string, newStamm: string, newKontakt: string): Promise<void> {
     const contract = await initContract()
-    const hash = hashIdentity(ahv, birthdate)
     await contract.updateEPD(hash, newStamm, newKontakt)
 }
 
-export async function deleteEPD(ahv: string, birthdate: string): Promise<void> {
+export async function deleteEPD(hash: string): Promise<void> {
     const contract = await initContract()
-    const hash = hashIdentity(ahv, birthdate)
     await contract.deleteEPD(hash)
 }
