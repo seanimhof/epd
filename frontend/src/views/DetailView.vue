@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-4xl">
+    <div  v-if="role !== 'oeffentlich'" class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-4xl">
       <h2 class="text-2xl font-bold mb-6 text-center">EPD-Details</h2>
 
       <div v-if="loading" class="text-center text-gray-500 dark:text-gray-400">Lade Daten...</div>
@@ -92,6 +92,10 @@
         <RouterLink to="/search" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">Zurück zur Suche</RouterLink>
       </div>
     </div>
+    <div v-else class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-4xl">
+      <h2 class="text-2xl font-bold mb-6 text-center">Kein Zugriff auf Dossier</h2>
+
+    </div>
   </div>
 </template>
 
@@ -111,6 +115,7 @@ const loading = ref(true)
 const error = ref('')
 const uploadMessage = ref('')
 const editingContact = ref(false)
+const role = ref<'oeffentlich' | 'fachperson'>(localStorage.getItem('Role') as 'oeffentlich' | 'fachperson' || 'oeffentlich')
 
 const patient = ref({
   vorname: '',

@@ -11,7 +11,7 @@
       </div>
 
       <button
-        v-if="role === 'fachperson'"
+        v-if="role !== 'oeffentlich'"
         @click="openEPD()"
         class="w-full bg-green-600 text-white py-2 mb-4 rounded hover:bg-green-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
       >

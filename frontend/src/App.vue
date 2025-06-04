@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
-const role = ref<'oeffentlich' | 'fachperson'>(localStorage.getItem('Role') as 'oeffentlich' | 'fachperson' || 'oeffentlich')
+const role = ref<'oeffentlich' | 'fachperson' | 'Arzt'>(localStorage.getItem('Role') as 'oeffentlich' | 'fachperson' || 'oeffentlich', 'Arzt')
 
 // Speichern, wenn sich die Rolle ändert
 watch(role, (newRole) => {
@@ -54,6 +54,7 @@ watch(role, (newRole) => {
               >
                 <option value="oeffentlich">Öffentlich</option>
                 <option value="fachperson">Fachperson</option>
+                <option value="arzt">Arzt</option>
               </select>
             </div>
           </div>
