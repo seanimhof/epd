@@ -28,7 +28,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { readAccess } from '@/services/auditService'
+import { hashData, readAccess } from '@/services/auditService'
 import { searchEPD } from '@/services/registryService'
 import { onMounted, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
@@ -63,7 +63,7 @@ async function openEPD() {
     toast.info("Zugriff wird in Blockchain protokolliert")
 
     try {
-      await readAccess(id) //@SEAN: Das tutet noch nicht
+      await readAccess(id, hashData(role.value))
       toast.info("Zugriff bestätigt, EPD wird geöffnet")
 
       setTimeout(() => {

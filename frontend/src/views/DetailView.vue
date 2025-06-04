@@ -103,7 +103,7 @@
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
-import { writeAccess, readAccess } from '@/services/auditService'
+import { writeAccess, readAccess, hashData } from '@/services/auditService'
 import { deleteEPD as apiDeleteEPD, updateEPD } from '@/services/registryService'
 
 const route = useRoute()
@@ -161,7 +161,6 @@ function loadEPD() {
 }
 
 async function downloadDocument(doc: { name: string }) {
-  await readAccess(id)
   toast.success(`'${doc.name}' wird heruntergeladen (Demo)`)
 }
 function saveEPD() {
@@ -179,7 +178,7 @@ async function handleUpload(event: Event) {
   documents.value.push({ name: file.name })
   saveEPD()
   uploadMessage.value = `'${file.name}' erfolgreich hochgeladen (Demo)`
-  await writeAccess(id)
+  await writeAccess(id, hashData(file.name))
 
   setTimeout(() => (uploadMessage.value = ''), 3000)
 }

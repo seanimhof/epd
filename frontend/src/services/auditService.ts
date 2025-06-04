@@ -1,4 +1,4 @@
-import { Contract, BrowserProvider } from 'ethers'
+import { Contract, BrowserProvider, keccak256, toUtf8Bytes } from 'ethers'
 import abi from '@/contracts/audit_abi.json'
 import addresses from '@/contracts/addresses.json'
 
@@ -73,24 +73,29 @@ export async function getAuditEntries(epdId: string): Promise<AuditEntry[]> {
     return logs
 }
 
-export async function writeAccess(hash: string): Promise<void> {
+export function hashData(data: string): string {
+    return keccak256(toUtf8Bytes(data))
+}
+
+
+export async function writeAccess(hash: string, dataHash: string): Promise<void> {
     const accessor = localStorage.getItem('firstName')
     const contract = await initContract()
-    const tx = await contract.addAuditLog(accessor, hash, AccessType.Write)
+    const tx = await contract.addAuditLog(accessor, hash, AccessType.Write, dataHash)
     await tx.wait()
 }
 
-export async function readAccess(hash: string): Promise<void> {
+export async function readAccess(hash: string, dataHash: string): Promise<void> {
     const accessor = localStorage.getItem('firstName')
     const contract = await initContract()
-    const tx = await contract.addAuditLog(accessor, hash, AccessType.Read)
+    const tx = await contract.addAuditLog(accessor, hash, AccessType.Read, dataHash)
     await tx.wait()
 }
 
-export async function emergencyAccess(hash: string): Promise<void> {
+export async function emergencyAccess(hash: string, dataHash: string): Promise<void> {
     const accessor = localStorage.getItem('firstName')
     const contract = await initContract()
 
-    const tx = await contract.addAuditLog(accessor, hash, AccessType.Emergency)
+    const tx = await contract.addAuditLog(accessor, hash, AccessType.Emergency, dataHash)
     await tx.wait()
 }
