@@ -25,7 +25,8 @@ async function initContract(): Promise<Contract> {
 export enum AccessType {
     Read = 'read',
     Write = 'write',
-    Emergency = 'emergency'
+    Emergency = 'emergency',
+    Create = 'create'
 }
 
 export interface AuditEntry {
@@ -60,6 +61,7 @@ export async function getAuditEntries(epdId: string): Promise<AuditEntry[]> {
     if (!contract) await initContract()
     try {
         const count = await contract!.getEpdLogCount(epdId)
+        console.log(count)
         logs = await Promise.all(
             Array.from({ length: Number(count) }, (_, i) =>
                 contract!.getEpdLogByIndex(epdId, i)
@@ -79,23 +81,32 @@ export function hashData(data: string): string {
 
 
 export async function writeAccess(hash: string, dataHash: string): Promise<void> {
-    const accessor = localStorage.getItem('firstName')
+    const accessor = localStorage.getItem('role')
     const contract = await initContract()
     const tx = await contract.addAuditLog(accessor, hash, AccessType.Write, dataHash)
     await tx.wait()
 }
 
 export async function readAccess(hash: string, dataHash: string): Promise<void> {
-    const accessor = localStorage.getItem('firstName')
+    const accessor = localStorage.getItem('role')
     const contract = await initContract()
     const tx = await contract.addAuditLog(accessor, hash, AccessType.Read, dataHash)
     await tx.wait()
 }
 
 export async function emergencyAccess(hash: string, dataHash: string): Promise<void> {
-    const accessor = localStorage.getItem('firstName')
+    const accessor = localStorage.getItem('role')
     const contract = await initContract()
 
     const tx = await contract.addAuditLog(accessor, hash, AccessType.Emergency, dataHash)
+    await tx.wait()
+}
+
+
+export async function auditCreation(hash: string, dataHash: string): Promise<void> {
+    const accessor = localStorage.getItem('role')
+    const contract = await initContract()
+
+    const tx = await contract.addAuditLog(accessor, hash, AccessType.Create, dataHash)
     await tx.wait()
 }

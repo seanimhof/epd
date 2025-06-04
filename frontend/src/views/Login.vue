@@ -4,7 +4,7 @@
       <h2 class="text-3xl font-bold mb-6">EPD gefunden</h2>
 
       <div class="text-left space-y-4 mb-8">
-        <p><span class="font-semibold">ID:</span> {{ id }}</p>
+        <p style="word-wrap: break-word;"><span class="font-semibold">ID:</span> {{ id }}</p>
         <p v-if="epdData?.stamm"><span class="font-semibold">Stammgemeinschaft:</span> {{ epdData.stamm }}</p>
         <p v-if="epdData?.kontakt"><span class="font-semibold">Kontaktdetails:</span> {{ epdData.kontakt }}</p>
         <p v-if="!epdData?.stamm && !epdData?.kontakt" class="text-gray-500 dark:text-gray-400">Keine Details gefunden.</p>

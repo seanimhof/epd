@@ -10,6 +10,7 @@
         <!-- Patient information -->
         <div>
           <h3 class="text-xl font-semibold mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">Patienteninformationen</h3>
+          <p style="word-wrap: break-word;"><span class="font-semibold">ID:</span> {{ id }}</p>
           <p><strong>Vorname:</strong> {{ patient.vorname }}</p>
           <p><strong>Nachname:</strong> {{ patient.nachname }}</p>
           <p><strong>Geburtsdatum:</strong> {{ patient.geburtsdatum }}</p>
