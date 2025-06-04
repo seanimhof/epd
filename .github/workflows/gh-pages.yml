@@ -47,7 +47,7 @@ jobs:
         id: deploy_registry
         run: |
           echo "Deploying Registry contract..."
-          output=$(forge create src/Registry.sol:Registry --broadcast --slow \
+          output=$(forge create src/Registry.sol:Registry --broadcast \
             --rpc-url ${{ secrets.SEPOLIA_RPC }} \
             --private-key ${{ secrets.PRIVATE_KEY }})
           echo "=== Forge Output ==="
@@ -57,7 +57,7 @@ jobs:
           echo "REGISTRY_CONTRACT_ADDRESS=$deployed_address" >> $GITHUB_ENV
           sleep 30s
           echo "Deploying Audit contract..."
-          output=$(forge create src/Audit.sol:Audit --broadcast --slow \
+          output=$(forge create src/Audit.sol:Audit --broadcast \
             --rpc-url ${{ secrets.SEPOLIA_RPC }} \
             --private-key ${{ secrets.PRIVATE_KEY }})
           echo "=== Forge Output ==="
