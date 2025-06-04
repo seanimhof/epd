@@ -4,7 +4,6 @@
       <h2 class="text-2xl font-bold mb-6 text-center">EPD-Details</h2>
 
       <div v-if="loading" class="text-center text-gray-500 dark:text-gray-400">Lade Daten...</div>
-      <div v-else-if="error" class="text-red-600 dark:text-red-400 text-center">{{ error }}</div>
       <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-8">
         
         <!-- Patient information -->
@@ -45,8 +44,6 @@
                   class="hidden"
                 />
               </label>
-
-              <p v-if="uploadMessage" class="text-green-600 dark:text-green-400 text-sm mt-2">{{ uploadMessage }}</p>
             </div>
           </div>
         </div>
@@ -119,8 +116,7 @@ const toast = useToast()
 
 const id = route.params.id as string
 const loading = ref(true)
-const error = ref('')
-const uploadMessage = ref('')
+
 const editingContact = ref(false)
 const role = ref<'oeffentlich' | 'Professor Dr. Franke'>(localStorage.getItem('Role') as 'oeffentlich' | 'Professor Dr. Franke' || 'oeffentlich')
 
@@ -161,7 +157,7 @@ function loadEPD() {
     documents.value = epd.documents || []
     kontakt.value = epd.kontakt || { stamm: '', url: '' }
   } catch (err) {
-    error.value = 'Fehler beim Laden des EPD.'
+    toast.error('Fehler beim Laden des EPD.')
   } finally {
     loading.value = false
   }
@@ -181,13 +177,14 @@ function saveEPD() {
 async function handleUpload(event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (!file) return
-
-  documents.value.push({ name: file.name })
-  saveEPD()
-  uploadMessage.value = `'${file.name}' erfolgreich hochgeladen (Demo)`
-  await writeAccess(id, hashData(file.name))
-
-  setTimeout(() => (uploadMessage.value = ''), 3000)
+  try {
+    documents.value.push({ name: file.name })
+    saveEPD()
+    await writeAccess(id, hashData(file.name))
+    toast.success(`'${file.name}' erfolgreich hochgeladen`)
+  } catch (error) {
+    toast.error("Dokument konnte nicht hochgeladen werden")
+  }
 }
 
 async function deleteDossier() {
