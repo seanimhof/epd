@@ -198,20 +198,25 @@ function handleUpload(event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (!file) return
   pendingFile.value = file
-  toast.info(`Datei '${file.name}' ausgewählt. Klicken Sie auf "Speichern und Schliessen".`)
+  toast.info(`Datei '${file.name}' ausgewählt. Klicken Sie auf "Speichern".`)
 }
 
 async function saveAndCloseUpload() {
   const file = pendingFile.value
   if (!file) return
 
+  const userInteraction = toast.warning("Bevor die Datei gespeichert werden kann, musst du deine Anfrage via Metamask signieren werden.<br/>Nach dem bestätigen kann es einige Sekunden dauern bis die Datei im Dossier erscheint.", {
+      duration: 0
+    })
   try {
     await writeAccess(id, hashData(file.name))
+    userInteraction.dismiss();
     documents.value.push({ name: file.name + " (" + hashData(file.name) + ")" })
     saveEPD()
     toast.success(`'${file.name}' erfolgreich hochgeladen und gespeichert`)
     pendingFile.value = null
   } catch (error) {
+    userInteraction.dismiss();
     toast.error("Dokument konnte nicht hochgeladen werden")
   }
 }
@@ -223,13 +228,19 @@ async function deleteDossier() {
   }
   const confirmDelete = window.confirm('Möchten Sie das Dossier wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')
   if (confirmDelete) {
+
+    const userInteraction = toast.warning("Bevor das Dossier gelöscht werden kann, musst du deine Anfrage via Metamask signieren werden.<br/>Nach dem bestätigen kann es einige Sekunden dauern bis das Dossier gelöscht ist.", {
+      duration: 0
+    })
     try {
       localStorage.removeItem(`epd_${id}`)
       await apiDeleteEPD(id)
       await auditCreationDelete(id, hashData(""));
+      userInteraction.dismiss();
       toast.success('Dossier wurde erfolgreich gelöscht.')
       router.push({ path: '/search' })
     } catch (error) {
+      userInteraction.dismiss();
       toast.error('Dossier konnte nicht gelöscht werden')
     }
   }
@@ -253,13 +264,19 @@ async function saveKontakt() {
     patient: patient.value,
     documents: documents.value,
   }
+
+  const userInteraction = toast.warning("Bevor die Kontaktdaten im Dossier angepasst werden können, musst du deine Anfrage via Metamask signieren werden.<br/>Nach dem bestätigen kann es einige Sekunden dauern bis eine Bestätigung erscheint.", {
+      duration: 0
+    })
   try {
     await updateEPD(id, kontakt.value.stamm, kontakt.value.url)
     await auditCreationUpdate(id, hashData(""));
+    userInteraction.dismiss();
     localStorage.setItem(`epd_${id}`, JSON.stringify(epd))
     toast.success('Kontaktdaten gespeichert')
     editingContact.value = false
   } catch (error) {
+    userInteraction.dismiss();
     toast.error('Kontaktdaten konnten nicht angepasst werden')
   }
 }

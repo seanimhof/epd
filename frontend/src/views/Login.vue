@@ -68,7 +68,7 @@ async function openEPD() {
   setTimeout(async () => {
     toast.info("Zugriff wird in Blockchain protokolliert")
 
-    const userInteraction = toast.warning( "Bevor das Dossier geöffnet werden kann, musst du deine Anfrage via Metamask signieren werden.", {
+    const userInteraction = toast.warning("Bevor das Dossier geöffnet werden kann, musst du deine Anfrage via Metamask signieren werden.<br/>Nach dem bestätigen kann es einige Sekunden dauern bis das Dossier geöffnet wird.", {
       duration: 0
     })
 
@@ -77,9 +77,7 @@ async function openEPD() {
       userInteraction.dismiss()
       toast.info("Zugriff bestätigt, EPD wird geöffnet")
 
-      setTimeout(() => {
-        router.push(`/detail/${id}`)
-      }, 1000)
+      router.push(`/detail/${id}`)
     } catch (error) {
       console.error(error)
       toast.error("Zugriff fehlgeschlagen")
