@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+  <div class="min-h-[calc(100vh-5rem)] flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
     <!-- Fehlermeldung -->
     <div
       v-if="!walletInstalled"
