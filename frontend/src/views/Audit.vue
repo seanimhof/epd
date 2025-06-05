@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import Audit from '@/components/Audit.vue';
 import AuditBlockchain from '@/components/AuditBlockchain.vue';
 </script>
 

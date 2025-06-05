@@ -1,3 +1,4 @@
+import { keccak256 } from "ethers"
 import { hashIdentity } from "./registryService"
 
 export interface User {
@@ -16,16 +17,20 @@ export function getUsers(): User[] {
     return [
         {
             id: hashIdentity('Arzt ', '#1'),
-            name: 'Arzt #1',
+            name: 'Arzt #123456',
             isArzt: true
         },
         {
             id: hashIdentity('Professor ', '#2'),
-            name: 'Professor #2',
+            name: 'Professor #987654',
             isArzt: true
         },
         defaultUser
     ]
+}
+
+export function getUserIdForAuditLog(hashId: string): string {
+    return hashId == hashIdentity('Arzt ', '#1') ? '123456' : '987654'
 }
 
 export function getDefaultUser(): User {
