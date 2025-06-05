@@ -38,11 +38,7 @@ contract Audit {
         return accessorAuditIndexes[_accessorWallet].length;
     }
 
-    function getAccessorLogByIndex(bytes32 _accessorWallet, uint256 index)
-        public
-        view
-        returns (AuditEntry memory)
-    {
+    function getAccessorLogByIndex(bytes32 _accessorWallet, uint256 index) public view returns (AuditEntry memory) {
         return auditLogs[accessorAuditIndexes[_accessorWallet][index]];
     }
 
