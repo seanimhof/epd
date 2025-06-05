@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-    <div  v-if="getCurrentUser()?.isArzt" class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-4xl">
+    <div  v-if="getCurrentUser()?.isArzt" class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-7xl">
       <h2 class="text-2xl font-bold mb-6 text-center">EPD-Details</h2>
 
       <div v-if="loading" class="text-center text-gray-500 dark:text-gray-400">Lade Daten...</div>
@@ -89,16 +89,16 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="mt-8 space-y-4">
+      <div class="mt-8 space-y-4 flex flex-col items-center text-center">
         <button
           @click="toggleEditContact"
-          class="w-full bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-yellow-700 transition"
+          class="w-1/2 bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-yellow-700 transition"
         >
           {{ editingContact ? 'Abbrechen' : 'Kontaktdetails anpassen' }}
         </button>
         <button
           @click="deleteDossier"
-          class="w-full bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition"
+          class="w-1/2 bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition"
         >
           Dossier löschen
         </button>

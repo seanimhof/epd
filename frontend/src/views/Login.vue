@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center text-gray-900 dark:text-gray-100 px-4">
-    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-xl text-center">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-2xl text-center">
       <h2 class="text-3xl font-bold mb-6">EPD gefunden</h2>
 
       <div class="text-left space-y-4 mb-8">
