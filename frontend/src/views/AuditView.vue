@@ -17,7 +17,7 @@
           {{ formatDate(entry[0]) }}
         </div>
         <div class="text-sm text-gray-700 dark:text-gray-300">
-          Zugriff durch <span class="font-semibold">{{ entry[1] }}</span>
+          Zugriff durch Benutzer mit ID: <span class="font-semibold">{{ getUserIdForAuditLog(entry[1]) }} - </span>
           ({{ accessTypeGerman(entry[3]) }})
         </div>
         <div v-if="accessTypeGerman(entry[3])  == 'Schreiben'" class="text-sm text-gray-700 dark:text-gray-300">
@@ -40,6 +40,7 @@
 import { getAuditEntries } from '@/services/auditService'
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { getUserIdForAuditLog } from '@/services/userService'
 
 const auditEntries = ref<any[]>([])
 const sortedAuditEntries = computed(() =>
@@ -53,6 +54,7 @@ function accessTypeGerman(type: string): string {
   switch (type) {
     case 'read': return 'Lesen'
     case 'write': return 'Schreiben'
+    case 'update': return 'Update'
     case 'delete': return 'Löschen'
     case 'Create EPD': return 'EPD erstellt'
     default: return 'Unbekannt'

@@ -3,6 +3,8 @@ import { computed, onMounted, ref } from 'vue'
 import { useAudit } from '../composables/useAudit'
 import addresses from '../contracts/addresses.json'
 import { BrowserProvider } from 'ethers'
+import { getUserIdForAuditLog } from '@/services/userService'
+
 
 const CONTRACT_ADDRESS = addresses.audit
 
@@ -66,7 +68,7 @@ async function getExplorerBaseUrl(provider: BrowserProvider): Promise<string | n
         <span>{{ formatTimestamp(event.timestamp) }}</span>
 
         <span class="font-semibold">Accessor:</span>
-        <span>{{ event.accessorWallet.slice(0,11) }}...{{ event.accessorWallet.slice(-4) }}</span>
+        <span>{{ getUserIdForAuditLog(event.accessorWallet) }}</span>
 
         <span class="font-semibold">EPD ID:</span>
         <span class="break-all">{{ event.epdId.slice(0,10) }}...{{ event.epdId.slice(-4) }}</span>
