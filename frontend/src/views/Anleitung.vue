@@ -1,6 +1,8 @@
 <template>
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 py-12 px-4 flex justify-center">
-      <div class="max-w-2xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
+    <div
+  class="min-h-[calc(100vh-5rem)] flex justify-center px-4 py-6 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 w-full overflow-x-auto"
+>
+  <div class="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
         <h1 class="text-3xl font-bold mb-6 text-center">Anleitung zur Demo</h1>
   
         <p class="mb-6 text-center text-gray-700 dark:text-gray-300">
@@ -16,7 +18,7 @@
         <h2 class="text-xl font-semibold mb-3">🩺 Funktionen für Ärzte</h2>
         <ul class="list-disc list-inside space-y-2 mb-6">
           <li><strong>EPD öffnen</strong>: Vollständige Einsicht in bestehende Dossiers.</li>
-          <li><strong>EPD eintragen</strong>: Neues Dossier erfassen über <RouterLink to="/insert" class="underline text-blue-600 dark:text-blue-400">/insert</RouterLink>.</li>
+          <li><strong>EPD eintragen</strong>: Neues Dossier erfassen über <RouterLink to="/insert" class="underline text-blue-600 dark:text-blue-400">einfügen</RouterLink>.</li>
           <li><strong>EPD anpassen</strong>: Kontaktinformationen ändern.</li>
           <li><strong>EPD löschen</strong>: Dossier aus der Registry entfernen.</li>
         </ul>

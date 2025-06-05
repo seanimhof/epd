@@ -55,18 +55,18 @@ async function getExplorerBaseUrl(provider: BrowserProvider): Promise<string | n
 
 <template>
 
-    <h2 class="text-4xl font-bold mt-8 text-center">Blockchain History</h2>
+    <h2 class="text-4xl font-bold mt-8 text-center">Audit Blockchain Event History</h2>
     <p class="text-x1 mb-4 text-center">CA: {{ CONTRACT_ADDRESS }}</p>
     <div class="grid grid-cols-5 gap-4 mb-6 max-w-full w-full">
 
-     <div v-for="(event, index) in decoratedEntries.slice(-15).reverse()" :key="event.txHash + index" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+     <div v-for="(event, index) in decoratedEntries.slice(-25).reverse()" :key="event.txHash + index" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
       <div class="grid grid-cols-[auto_1fr] gap-x-2 gap-y-0">
 
         <span class="font-semibold">Timestamp:</span>
         <span>{{ formatTimestamp(event.timestamp) }}</span>
 
         <span class="font-semibold">Accessor:</span>
-        <span>{{ event.accessorWallet }}</span>
+        <span>{{ event.accessorWallet.slice(0,11) }}...{{ event.accessorWallet.slice(-4) }}</span>
 
         <span class="font-semibold">EPD ID:</span>
         <span class="break-all">{{ event.epdId.slice(0,10) }}...{{ event.epdId.slice(-4) }}</span>

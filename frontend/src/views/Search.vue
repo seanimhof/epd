@@ -80,10 +80,10 @@
 
         <!-- Eingefügte Dossiers -->
         <div class="pt-4 border-t border-gray-300 dark:border-gray-600 mt-4">
-          <h3 class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">Eingefügte Dossiers:</h3>
+          <h3 class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">Neuste Dossiers:</h3>
           <div class="space-y-1">
             <button
-              v-for="(dossier, index) in insertedDossiers"
+              v-for="(dossier, index) in insertedDossiers.slice(-6).reverse()"
               :key="index"
               type="button"
               @click="fillSample((dossier as any).ahv, (dossier as any).dob)"

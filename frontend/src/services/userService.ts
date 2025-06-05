@@ -1,3 +1,5 @@
+import { hashIdentity } from "./registryService"
+
 export interface User {
     name: string
     id: string
@@ -13,13 +15,13 @@ const defaultUser: User = {
 export function getUsers(): User[] {
     return [
         {
-            id: '0xd3d8c449eb124c9da0f213170f974f3f',
+            id: hashIdentity('Arzt ', '#1'),
             name: 'Arzt #1',
             isArzt: true
         },
         {
-            id: '0xfcd5a3a0129f73e791562a91baf0c301',
-            name: 'Arzt #2',
+            id: hashIdentity('Professor ', '#2'),
+            name: 'Professor #2',
             isArzt: true
         },
         defaultUser

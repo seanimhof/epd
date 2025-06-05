@@ -20,8 +20,17 @@
           Zugriff durch <span class="font-semibold">{{ entry[1] }}</span>
           ({{ accessTypeGerman(entry[3]) }})
         </div>
+        <div v-if="accessTypeGerman(entry[3])  == 'Schreiben'" class="text-sm text-gray-700 dark:text-gray-300">
+          Dokument Hash: {{ entry[4] }}
+        </div>
       </li>
       </ul>
+      <!-- Back Link -->
+      <div class="text-center mt-8 flex justify-center gap-4">
+        <RouterLink :to="`/detail/${id}`" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+          Zurück
+        </RouterLink>
+      </div>
     </div>
   </div>  
 

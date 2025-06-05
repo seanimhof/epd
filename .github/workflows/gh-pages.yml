@@ -66,6 +66,24 @@ jobs:
           echo "Audit deployed at: $deployed_address"
           echo "AUDIT_CONTRACT_ADDRESS=$deployed_address" >> $GITHUB_ENV
   
+      - name: Seed contracts
+        run: |
+          echo "Seeding Registry..."
+          CONTRACT_ADDRESS=$REGISTRY_CONTRACT_ADDRESS \
+          forge script script/Seed.s.sol --broadcast \
+            --rpc-url ${{ secrets.SEPOLIA_RPC }} \
+            --private-key ${{ secrets.PRIVATE_KEY }} \
+            --tc=SeedRegistry
+          sleep 30s
+          echo "Seeding Audit..."
+          CONTRACT_ADDRESS=$AUDIT_CONTRACT_ADDRESS \
+          forge script script/Seed.s.sol --broadcast \
+            --rpc-url ${{ secrets.SEPOLIA_RPC }} \
+            --private-key ${{ secrets.PRIVATE_KEY }} \
+            --tc=SeedAudit
+        env:
+          REGISTRY_CONTRACT_ADDRESS: ${{ env.REGISTRY_CONTRACT_ADDRESS }}
+          AUDIT_CONTRACT_ADDRESS: ${{ env.AUDIT_CONTRACT_ADDRESS }}
 
       - name: Setup Node
         uses: actions/setup-node@v4

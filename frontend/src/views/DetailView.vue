@@ -16,15 +16,22 @@
         </div>
 
         <!-- Documents -->
-        <div>
+        <div class="break-all">
           <h3 class="text-xl font-semibold mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">Dokumente</h3>
 
           <ul class="space-y-3 mb-6">
-            <li v-for="(doc, index) in documents" :key="index" class="flex justify-between items-center">
-              <span>{{ doc.name }}</span>
+            <li
+              v-for="(doc, index) in documents"
+              :key="index"
+              class="flex items-start justify-between gap-4"
+            >
+              <!-- Allow text to wrap -->
+              <span class="flex-1 break-words text-sm">{{ doc.name }}</span>
+
+              <!-- Fixed-width button -->
               <button
                 @click="downloadDocument(doc)"
-                class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition text-sm"
+                class="w-32 text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition"
               >
                 Download
               </button>
@@ -119,7 +126,7 @@
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
-import { writeAccess, readAccess, hashData } from '@/services/auditService'
+import { writeAccess, hashData, auditCreationDelete, auditCreationUpdate } from '@/services/auditService'
 import { deleteEPD as apiDeleteEPD, updateEPD } from '@/services/registryService'
 import { getCurrentUser } from '@/services/userService'
 
@@ -199,10 +206,8 @@ async function saveAndCloseUpload() {
   if (!file) return
 
   try {
-   
-    
     await writeAccess(id, hashData(file.name))
-    documents.value.push({ name: file.name })
+    documents.value.push({ name: file.name + " (" + hashData(file.name) + ")" })
     saveEPD()
     toast.success(`'${file.name}' erfolgreich hochgeladen und gespeichert`)
     pendingFile.value = null
@@ -212,11 +217,16 @@ async function saveAndCloseUpload() {
 }
 
 async function deleteDossier() {
+  if(checkDemoDossier(id)) {
+    toast.warning('Demo Dossier können nicht gelöscht werden')
+    return
+  }
   const confirmDelete = window.confirm('Möchten Sie das Dossier wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')
   if (confirmDelete) {
     try {
       localStorage.removeItem(`epd_${id}`)
       await apiDeleteEPD(id)
+      await auditCreationDelete(id, hashData(""));
       toast.success('Dossier wurde erfolgreich gelöscht.')
       router.push({ path: '/search' })
     } catch (error) {
@@ -229,6 +239,15 @@ function toggleEditContact() {
   editingContact.value = !editingContact.value
 }
 
+function checkDemoDossier(id: string): boolean {
+  const demoDossierIds: string[] = [
+    '0x7e91342f1fe10a13f55046eca6b565e6fc810e59719b34cefbab2d603ead6169', 
+    '0x00e5afdac19d2988381fd7b11e8a7c6e7c55f13fd63a6fa45eb554f93f66415d',
+    '0x82890cc5629da597e20a74a4e6c22bc8afb3cc9d97f1e56b6017cd82ddd2ce40'
+  ]
+  return demoDossierIds.includes(id)
+}
+
 async function saveKontakt() {
   const epd = {
     patient: patient.value,
@@ -236,6 +255,7 @@ async function saveKontakt() {
   }
   try {
     await updateEPD(id, kontakt.value.stamm, kontakt.value.url)
+    await auditCreationUpdate(id, hashData(""));
     localStorage.setItem(`epd_${id}`, JSON.stringify(epd))
     toast.success('Kontaktdaten gespeichert')
     editingContact.value = false

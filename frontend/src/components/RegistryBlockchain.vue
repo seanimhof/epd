@@ -56,11 +56,11 @@ async function getExplorerBaseUrl(provider: BrowserProvider): Promise<string | n
 
 <template>
 
-    <h2 class="text-4xl font-bold mt-8 text-center">Blockchain History</h2>
+    <h2 class="text-4xl font-bold mt-8 text-center">Registry Blockchain Event History</h2>
     <p class="text-x1 mb-4 text-center">CA: {{ CONTRACT_ADDRESS }}</p>
     <div class="grid grid-cols-5 gap-4 mb-6 max-w-full w-full">
 
-     <div v-for="(event, index) in decoratedEntries.slice(-15).reverse()" :key="event.txHash + index" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+     <div v-for="(event, index) in decoratedEntries.slice(-25).reverse()" :key="event.txHash + index" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
       <div class="grid grid-cols-[auto_1fr] gap-x-2 gap-y-0">
         <span class="font-semibold">Event Type:</span>
         <span>{{ event.eventType }}</span>

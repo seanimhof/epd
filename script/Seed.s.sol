@@ -68,7 +68,7 @@ contract SeedRegistry is Script {
 
 contract SeedAudit is Script {
     struct SampleAudit {
-        string accessorId;
+        bytes32 accessorWallet;
         bytes32 epdId;
         string accessType;
         bytes32 dataHash;
@@ -86,7 +86,7 @@ contract SeedAudit is Script {
         Audit audit = Audit(vm.envAddress("CONTRACT_ADDRESS"));
 
         for (uint256 i = 0; i < data.length; i++) {
-            audit.addAuditLog(data[i].accessorId, data[i].epdId, data[i].accessType, keccak256("data"));
+            audit.addAuditLog(data[i].accessorWallet, data[i].epdId, data[i].accessType, keccak256("data"));
         }
 
         console.log("Seeding complete. Audit CA:", address(audit));
@@ -97,26 +97,26 @@ contract SeedAudit is Script {
     function init() internal {
         data.push(
             SampleAudit({
-                accessorId: "Artzt",
+                accessorWallet: keccak256("Arzt #1"),
                 epdId: keccak256("756.1234.5678.902002-01-01"),
                 accessType: "Create EPD",
-                dataHash: keccak256("aaaaaaaa")
+                dataHash: keccak256("")
             })
         );
         data.push(
             SampleAudit({
-                accessorId: "Artzt",
+                accessorWallet: keccak256("Professor #1"),
                 epdId: keccak256("756.0987.6543.211999-12-31"),
                 accessType: "Create EPD",
-                dataHash: keccak256("bbbbbbbb")
+                dataHash: keccak256("")
             })
         );
         data.push(
             SampleAudit({
-                accessorId: "Professor Dr. Franke",
+                accessorWallet: keccak256("Arzt #1"),
                 epdId: keccak256("756.1212.1212.121985-06-06"),
                 accessType: "Create EPD",
-                dataHash: keccak256("cccccccc")
+                dataHash: keccak256("")
             })
         );
     }
