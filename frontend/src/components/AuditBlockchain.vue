@@ -77,7 +77,8 @@ async function getExplorerBaseUrl(provider: BrowserProvider): Promise<string | n
         <span>{{ event.accessType }}</span>
 
         <span class="font-semibold">File Hash:</span>
-        <span>{{ event.dataHash.slice(0, 11) }}...{{ event.dataHash.slice(-4) }}</span>
+        <span v-if="event.accessType == 'write' ">{{ event.dataHash.slice(0, 11) }}...{{ event.dataHash.slice(-4) }}</span>
+        <span v-else>-</span>
 
         <span class="font-semibold">Details:</span>
         <span v-if="event.explorerUrl">
