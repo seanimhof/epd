@@ -25,6 +25,12 @@
         </div>
       </li>
       </ul>
+      <!-- Back Link -->
+      <div class="text-center mt-8 flex justify-center gap-4">
+        <RouterLink :to="`/detail/${id}`" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+          Zurück
+        </RouterLink>
+      </div>
     </div>
   </div>  
 

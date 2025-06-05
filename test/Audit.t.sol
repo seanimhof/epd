@@ -12,13 +12,13 @@ contract AuditTest is Test {
     }
 
     function test_addAuditLog() public {
-        audit.addAuditLog("accessor1", keccak256("epd1"), "write", keccak256("aaaaaaa"));
+        audit.addAuditLog(keccak256("Arzt #1"), keccak256("epd1"), "write", keccak256("aaaaaaa"));
 
-        Audit.AuditEntry memory entry = audit.getAccessorLogByIndex("accessor1", 0);
+        Audit.AuditEntry memory entry = audit.getAccessorLogByIndex(keccak256("Arzt #1"), 0);
 
-        assertEq(entry.accessorWallet, "accessor1");
+        assertEq(entry.accessorWallet, keccak256("Arzt #1"));
         assertEq(entry.epdId, keccak256("epd1"));
         assertEq(entry.accessType, "write");
-        assertEq(audit.getAccessorLogCount("accessor1"), 1);
+        assertEq(audit.getAccessorLogCount(keccak256("Arzt #1")), 1);
     }
 }

@@ -4,20 +4,20 @@ pragma solidity ^0.8.28;
 contract Audit {
     struct AuditEntry {
         uint256 timestamp;
-        string accessorWallet;
+        bytes32 accessorWallet;
         bytes32 epdId;
         string accessType;
         bytes32 dataHash;
     }
 
-    mapping(string => uint256[]) public accessorAuditIndexes;
+    mapping(bytes32 => uint256[]) public accessorAuditIndexes;
     mapping(bytes32 => uint256[]) public epdAuditIndexes;
 
     AuditEntry[] public auditLogs;
 
-    event AuditLogged(uint256 timestamp, string accessorWallet, bytes32 epdId, string accessType, bytes32 dataHash);
+    event AuditLogged(uint256 timestamp, bytes32 accessorWallet, bytes32 epdId, string accessType, bytes32 dataHash);
 
-    function addAuditLog(string memory _accessorWallet, bytes32 _epdId, string memory _accessType, bytes32 _dataHash)
+    function addAuditLog(bytes32 _accessorWallet, bytes32 _epdId, string memory _accessType, bytes32 _dataHash)
         public
     {
         auditLogs.push(
@@ -34,11 +34,11 @@ contract Audit {
         emit AuditLogged(block.timestamp, _accessorWallet, _epdId, _accessType, _dataHash);
     }
 
-    function getAccessorLogCount(string calldata _accessorWallet) public view returns (uint256) {
+    function getAccessorLogCount(bytes32 _accessorWallet) public view returns (uint256) {
         return accessorAuditIndexes[_accessorWallet].length;
     }
 
-    function getAccessorLogByIndex(string calldata _accessorWallet, uint256 index)
+    function getAccessorLogByIndex(bytes32 _accessorWallet, uint256 index)
         public
         view
         returns (AuditEntry memory)

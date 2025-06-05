@@ -56,6 +56,7 @@
   import { useRouter } from 'vue-router'
   import { useToast } from 'vue-toast-notification'
   import { updateEPD } from '@/services/registryService' // Import the updateEPD method
+import { auditCreationUpdate, hashData } from '@/services/auditService'
   
   const $toast = useToast()
   const $router = useRouter()
@@ -77,6 +78,7 @@
   
       // Call the updateEPD function from the auditService to update the smart contract
       await updateEPD('some-hash', newStamm.value, newKontakt.value)
+      await auditCreationUpdate('some-hash', hashData(""));
   
       $toast.success('EPD-Daten wurden erfolgreich aktualisiert!')
       newStamm.value = ''

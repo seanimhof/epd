@@ -26,6 +26,8 @@ async function initContract(): Promise<Contract> {
 export enum AccessType {
     Read = 'read',
     Write = 'write',
+    Update = 'update',
+    Delete = 'delete',
     Emergency = 'emergency',
     Create = 'Create EPD'
 }
@@ -105,3 +107,9 @@ export const emergencyAccess = (hash: string, dataHash: string) =>
 
 export const auditCreation = (hash: string, dataHash: string) =>
     logAccess(AccessType.Create, hash, dataHash)
+
+export const auditCreationUpdate = (hash: string, dataHash: string) =>
+    logAccess(AccessType.Update, hash, dataHash)
+
+export const auditCreationDelete = (hash: string, dataHash: string) =>
+    logAccess(AccessType.Delete, hash, dataHash)
