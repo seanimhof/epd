@@ -27,7 +27,10 @@
       </ul>
       <!-- Back Link -->
       <div class="text-center mt-8 flex justify-center gap-4">
-        <RouterLink :to="`/detail/${id}`" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+        <RouterLink v-if="getCurrentUser()?.isArzt" :to="`/detail/${id}`" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+          Zurück
+        </RouterLink>
+        <RouterLink v-else :to="`/open/${id}`" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
           Zurück
         </RouterLink>
       </div>
@@ -40,7 +43,7 @@
 import { getAuditEntries } from '@/services/auditService'
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { getUserIdForAuditLog } from '@/services/userService'
+import { getCurrentUser, getUserIdForAuditLog } from '@/services/userService'
 
 const auditEntries = ref<any[]>([])
 const sortedAuditEntries = computed(() =>
